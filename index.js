@@ -98,6 +98,9 @@ module.exports = {
             this.test(options);
         },
         mixOptions: function(options) {
+            if (!options.gulp || !options.rootDir) {
+                console.log('Please provide your gulp and rootDir in the options!');
+            }
             return {
                 gulp: options.gulp,
                 rootDir: options.rootDir || __dirname,
