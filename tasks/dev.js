@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function(options) {
-    var onejsCompiler = require('../index.js').compiler;
+    var onejsCompiler = require('gulp-onejs-compiler');
     var tsc = require('gulp-typescript');
     var uglify = require('gulp-uglifyjs');
     var del = require('del');

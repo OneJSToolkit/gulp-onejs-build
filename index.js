@@ -1,7 +1,7 @@
 'use strict';
 
-var typeScriptGenerator = require('onejs').TypeScriptGenerator;
-var typeScriptViewModelGenerator = require('onejs').TypeScriptViewModelGenerator;
+var typeScriptGenerator = require('onejs-compiler').TypeScriptGenerator;
+var typeScriptViewModelGenerator = require('onejs-compiler').TypeScriptViewModelGenerator;
 var devTasks = require('./tasks/dev.js');
 var releaseTasks = require('./tasks/release.js');
 var testTasks = require('./tasks/test.js');

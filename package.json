@@ -20,7 +20,23 @@
   },
   "homepage": "https://github.com/OneJSToolkit/gulp-onejs-build",
   "dependencies": {
+    "autoprefixer-core": "^4.0.1",
+    "del": "^0.1.3",
+    "fs": "0.0.2",
+    "gulp-csstojs": "^1.0.1",
+    "gulp-git": "^0.5.5",
+    "gulp-less": "^1.3.6",
+    "gulp-minify-css": "^0.3.11",
+    "gulp-onejs-compiler": "^1.1.60",
+    "gulp-postcss": "^3.0.0",
+    "gulp-prompt": "^0.1.1",
+    "gulp-rename": "^1.2.0",
+    "gulp-size": "^1.1.0",
+    "gulp-typescript": "^2.3.0",
+    "gulp-uglifyjs": "^0.5.0",
+    "inquirer": "^0.8.0",
     "lodash": "^2.4.1",
-    "onejs": "^1.1.66"
+    "onejs-compiler": "^1.1.60",
+    "semver": "^4.1.0"
   }
 }
