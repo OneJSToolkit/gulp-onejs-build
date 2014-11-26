@@ -11,6 +11,7 @@ module.exports = function(options) {
     var postcss = require('gulp-postcss');
     var autoprefixer = require('autoprefixer-core');
     var _ = require('lodash');
+    var flatten = require('gulp-flatten');
 
     var gulp = options.gulp;
     var paths = options.paths;
@@ -59,19 +60,27 @@ module.exports = function(options) {
             .pipe(csstojs({
                 typeScript: true
             }))
+            .pipe(flatten())
             .pipe(gulp.dest(paths.temp.ts))
     });
 
     /** Compiles OneJS html templates */
     gulp.task('onejs-html', function() {
         return gulp.src(paths.src.htmlGlob)
-            .pipe(onejsCompiler())
+            .pipe(onejsCompiler({
+                paths: {
+                    onejs: 'onejs/',
+                    defaultView: '{{viewType}}'
+                }
+            }))
+            .pipe(flatten())
             .pipe(gulp.dest(paths.temp.ts));
     });
 
     /** Copies OneJS TypeScript files to temp directory for futher compilation */
     gulp.task('onejs-ts', function() {
         return gulp.src(paths.src.tsGlob)
+            .pipe(flatten())
             .pipe(gulp.dest(paths.temp.ts));
     });
 
