@@ -20,6 +20,8 @@ module.exports = function(options) {
 
     var bumpType;
     var newVersion;
+    var bumpNpm = false;
+    var bumpBower = false;
 
     /** Creates a minified version of your application */
     gulp.task('minify', ['tsc-amd'], function() {
@@ -81,28 +83,47 @@ module.exports = function(options) {
                 name: 'bumpType',
                 message: 'What type of version bump is this?',
                 choices: ['Major', 'Minor', 'Patch']
+            },
+            {
+                type: 'confirm',
+                name: 'bumpNpm',
+                message: 'Are you publishing to npm?'
+            },
+            {
+                type: 'confirm',
+                name: 'bumpBower',
+                message: 'Are you publishing to bower?'
             }
         ];
 
         return gulp.src(paths.staticFiles.npmPackage)
             .pipe(prompt.prompt(questions, function(answers) {
                 bumpType = answers.bumpType;
+                bumpNpm = !!answers.bumpNpm;
+                bumpBower = !!answers.bumpBower;
                 writeUpdatedVersionNumbers();
             }));
     });
 
     /** Helper function to bump the version number and write it to the npm package and bower files */
     var writeUpdatedVersionNumbers = function() {
-        var packageJson = JSON.parse(fs.readFileSync(paths.staticFiles.npmPackage, 'utf8'));
-        var bowerJson = JSON.parse(fs.readFileSync(paths.staticFiles.bowerPackage, 'utf8'));
-        newVersion = semver.inc(packageJson.version, bumpType.toLowerCase());
+        var packageJson;
+        var bowerJson;
 
-        packageJson.version = newVersion;
-        bowerJson.version = newVersion;
-
-        fs.writeFileSync(paths.staticFiles.npmPackage, JSON.stringify(packageJson, null, 2));
-
-        fs.writeFileSync(paths.staticFiles.bowerPackage, JSON.stringify(bowerJson, null, 2));
+        if (bumpNpm) {
+            packageJson = JSON.parse(fs.readFileSync(paths.staticFiles.npmPackage, 'utf8'));
+            newVersion = semver.inc(packageJson.version, bumpType.toLowerCase());
+            packageJson.version = newVersion;
+            fs.writeFileSync(paths.staticFiles.npmPackage, JSON.stringify(packageJson, null, 2));
+        }
+        if (bumpBower) {
+            bowerJson = JSON.parse(fs.readFileSync(paths.staticFiles.bowerPackage, 'utf8'));
+            if (!newVersion) {
+                newVersion = semver.inc(bowerJson.version, bumpType.toLowerCase());
+            }
+            bowerJson.version = newVersion;
+            fs.writeFileSync(paths.staticFiles.bowerPackage, JSON.stringify(bowerJson, null, 2));
+        }
     }
 
     /** Helper function to generate a git message based on version */
