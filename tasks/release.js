@@ -43,18 +43,22 @@ module.exports = function(options) {
 
     /** Creates the amd distributable directory */
     gulp.task('dist-amd', ['tsc-preprocess'], function() {
-        return gulp.src(paths.temp.tsGlob)
+        var tsResult = gulp.src(paths.temp.tsGlob)
             // Allow tscOption overrides, but ensure that we're targeting amd
-            .pipe(tsc(_.merge(tscOptions, {module: 'amd'})))
-            .pipe(gulp.dest(paths.dist.amd));
+            .pipe(tsc(_.merge(tscOptions, {module: 'amd', declarationFiles: true})));
+
+        tsResult.dts.pipe(gulp.dest(paths.dist.amd));
+        return tsResult.js.pipe(gulp.dest(paths.dist.amd));
     });
 
     /** Creates the commonjs distributable directory */
     gulp.task('dist-commonjs', ['tsc-preprocess'], function() {
-        return gulp.src(paths.temp.tsGlob)
+        var tsResult = gulp.src(paths.temp.tsGlob)
             // Allow tscOption overrides, but ensure that we're targeting commonjs
-            .pipe(tsc(_.merge(tscOptions, {module: 'commonjs'})))
-            .pipe(gulp.dest(paths.dist.commonjs));
+            .pipe(tsc(_.merge(tscOptions, {module: 'commonjs', declarationFiles: true})));
+
+        tsResult.dts.pipe(gulp.dest(paths.dist.commonjs));
+        return tsResult.js.pipe(gulp.dest(paths.dist.commonjs));
     });
 
     /** Creates both dist flavors */
