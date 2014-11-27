@@ -1,6 +1,8 @@
 'use strict';
 
 module.exports = function(options) {
+    var tsc = require('gulp-typescript');
+    var flatten = require('gulp-flatten');
     var _ = require('lodash');
 
     var karma = options.karma;
@@ -8,9 +10,11 @@ module.exports = function(options) {
     var paths = options.paths;
     var rootDir = options.rootDir;
     var karmaOptions = options.karmaOptions;
+    var tscOptions = options.tscOptions;
 
     gulp.task('test-preprocess', function() {
         return gulp.src(paths.test.glob)
+            .pipe(flatten())
             .pipe(gulp.dest(paths.temp.test));
     });
 

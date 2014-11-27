@@ -69,7 +69,7 @@ module.exports = function(options) {
         return gulp.src(paths.src.htmlGlob)
             .pipe(onejsCompiler({
                 paths: {
-                    onejs: 'onejs/',
+                    onejs: './onejs/',
                     defaultView: '{{viewType}}'
                 }
             }))

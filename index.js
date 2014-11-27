@@ -15,6 +15,7 @@ module.exports = {
                 // A website would consume files in this dir
                 root: 'app/',
                 jsGlob: 'app/**/*.js',
+                test: 'app/test/',
                 min: {
                     root: 'app-min/'
                 }
@@ -58,7 +59,8 @@ module.exports = {
                 // Temp staging dir for building
                 root: 'temp/',
                 ts: 'temp/ts/',
-                test: 'temp/test/',
+                test: 'temp/ts/',
+                testGlob: 'temp/ts/(*.test.ts|*.Test.ts)',
                 typings: 'temp/ts/typings/',
                 typingsGlob: 'temp/ts/typings/**/*.d.ts',
                 tsGlob: 'temp/ts/**/**/*.ts'

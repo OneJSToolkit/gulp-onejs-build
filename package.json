@@ -28,7 +28,7 @@
     "gulp-git": "^0.5.5",
     "gulp-less": "^1.3.6",
     "gulp-minify-css": "^0.3.11",
-    "gulp-onejs-compiler": "^1.1.60",
+    "gulp-onejs-compiler": "^1.1.67",
     "gulp-postcss": "^3.0.0",
     "gulp-prompt": "^0.1.1",
     "gulp-rename": "^1.2.0",
