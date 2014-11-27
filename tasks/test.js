@@ -12,15 +12,15 @@ module.exports = function(options) {
     var karmaOptions = options.karmaOptions;
     var tscOptions = options.tscOptions;
 
-    gulp.task('test-preprocess', function() {
+    gulp.task('build-test-preprocess', function() {
         return gulp.src(paths.test.glob)
             .pipe(flatten())
             .pipe(gulp.dest(paths.temp.test));
     });
 
-    gulp.task('test-build', ['test-preprocess', 'tsc-amd', 'copy-static-js-files', 'copy-onejs-js-files']);
+    gulp.task('build-test', ['build-test-preprocess', 'build-app-preprocess', 'build-app-amd', 'copy-static-js', 'copy-onejs-js']);
 
-    gulp.task('test', ['test-build', 'build'], function (done) {
+    gulp.task('test', ['build-test', 'build-app'], function (done) {
         karma.start(_.merge({
             configFile: rootDir + '/karma.conf.js',
             singleRun: true

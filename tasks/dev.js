@@ -29,30 +29,30 @@ module.exports = function(options) {
     });
 
     /** Copies static (non-OneJS) js files to app path */
-    gulp.task('copy-static-js-files', function() {
+    gulp.task('copy-static-js', function() {
         return gulp.src(paths.staticFiles.js)
             .pipe(gulp.dest(paths.app.root));
     });
 
-    gulp.task('copy-static-dts-files', function() {
+    gulp.task('copy-typings-dts', function() {
         return gulp.src(paths.typings.glob)
             .pipe(gulp.dest(paths.temp.typings));
     });
 
     /** Copies .d.ts files from OneJS to temp path to compile against */
-    gulp.task('copy-onejs-dts-files', function() {
+    gulp.task('copy-onejs-dts', function() {
         return gulp.src(paths.onejsFiles.dts)
             .pipe(gulp.dest(paths.temp.ts + 'onejs/'));
     });
 
     /** Copies static OneJS js files to app path */
-    gulp.task('copy-onejs-js-files', function() {
+    gulp.task('copy-onejs-js', function() {
         return gulp.src(paths.onejsFiles.js)
             .pipe(gulp.dest(paths.app.root + 'onejs/'));
     });
 
     /** Runs LESS compiler, auto-prefixer, and uglify, then creates js modules and outputs to temp folder */
-    gulp.task('less-to-js', function() {
+    gulp.task('build-less', function() {
         return gulp.src(paths.src.lessGlob)
             .pipe(less())
             .pipe(postcss([autoprefixer(autoprefixerOptions)]))
@@ -65,7 +65,7 @@ module.exports = function(options) {
     });
 
     /** Compiles OneJS html templates */
-    gulp.task('onejs-html', function() {
+    gulp.task('build-templates', function() {
         return gulp.src(paths.src.htmlGlob)
             .pipe(onejsCompiler({
                 paths: {
@@ -78,17 +78,17 @@ module.exports = function(options) {
     });
 
     /** Copies OneJS TypeScript files to temp directory for futher compilation */
-    gulp.task('onejs-ts', function() {
+    gulp.task('copy-typescript', function() {
         return gulp.src(paths.src.tsGlob)
             .pipe(flatten())
             .pipe(gulp.dest(paths.temp.ts));
     });
 
     /** Runs the basic pre-processing steps before compilation */
-    gulp.task('tsc-preprocess', ['onejs-html', 'onejs-ts', 'less-to-js', 'copy-onejs-dts-files', 'copy-static-dts-files']);
+    gulp.task('build-app-preprocess', ['build-templates', 'copy-typescript', 'build-less', 'copy-onejs-dts', 'copy-typings-dts']);
 
     /** Runs the TypeScript amd compiler over your application .ts files */
-    gulp.task('tsc-amd', ['tsc-preprocess'], function() {
+    gulp.task('build-app-amd', ['build-app-preprocess'], function() {
         return gulp.src(paths.temp.tsGlob)
             // Allow tscOption overrides, but ensure that we're targeting amd
             .pipe(tsc(_.merge(tscOptions, {module: 'amd'})))
@@ -96,7 +96,7 @@ module.exports = function(options) {
     });
 
     /** Runs the TypeScript commonjs compiler over your application .ts files */
-    gulp.task('tsc-commonjs', ['tsc-preprocess'], function() {
+    gulp.task('build-app-commonjs', ['build-app-preprocess'], function() {
         return gulp.src(paths.temp.tsGlob)
             // Allow tscOption overrides, but ensure that we're targeting commonjs
             .pipe(tsc(_.merge(tscOptions, {module: 'commonjs'})))
@@ -109,8 +109,8 @@ module.exports = function(options) {
     });
 
     /** Default dev task for building */
-    gulp.task('build', ['tsc-amd', 'copy-static-js-files', 'copy-onejs-js-files']);
+    gulp.task('build-app', ['build-app-amd', 'copy-static-js', 'copy-onejs-js']);
 
     /** Our default task, but can be overridden by the users gulp file */
-    gulp.task('default', ['build']);
+    gulp.task('default', ['build-app']);
 };

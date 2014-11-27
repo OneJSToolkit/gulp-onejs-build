@@ -24,7 +24,7 @@ module.exports = function(options) {
     var bumpBower = false;
 
     /** Creates a minified version of your application */
-    gulp.task('minify', ['tsc-amd'], function() {
+    gulp.task('build-app-minify', ['build-app-amd'], function() {
         return gulp.src([paths.app.jsGlob])
             .pipe(uglify())
             .pipe(size({
@@ -35,14 +35,14 @@ module.exports = function(options) {
     });
 
     /** Copies the minified static files to your application path */
-    gulp.task('copy-static-files-minified', function() {
+    gulp.task('copy-minified-static-files', function() {
         return gulp.src(paths.staticFiles.js)
             .pipe(uglify())
             .pipe(gulp.dest(paths.app.min.root));
     });
 
     /** Creates the amd distributable directory */
-    gulp.task('dist-amd', ['tsc-preprocess'], function() {
+    gulp.task('build-dist-amd', ['build-app-preprocess'], function() {
         var tsResult = gulp.src(paths.temp.tsGlob)
             // Allow tscOption overrides, but ensure that we're targeting amd
             .pipe(tsc(_.merge(tscOptions, {module: 'amd', declarationFiles: true})));
@@ -52,7 +52,7 @@ module.exports = function(options) {
     });
 
     /** Creates the commonjs distributable directory */
-    gulp.task('dist-commonjs', ['tsc-preprocess'], function() {
+    gulp.task('build-dist-commonjs', ['build-app-preprocess'], function() {
         var tsResult = gulp.src(paths.temp.tsGlob)
             // Allow tscOption overrides, but ensure that we're targeting commonjs
             .pipe(tsc(_.merge(tscOptions, {module: 'commonjs', declarationFiles: true})));
@@ -62,7 +62,7 @@ module.exports = function(options) {
     });
 
     /** Creates both dist flavors */
-    gulp.task('dist', ['dist-commonjs', 'dist-amd']);
+    gulp.task('build-dist', ['build-dist-commonjs', 'build-dist-amd']);
 
     /**
      * This next section of tasks are intentionally a bunch of small tasks
@@ -193,5 +193,5 @@ module.exports = function(options) {
     });;
 
     /** Builds the minified version of your app */
-    gulp.task('build-minify', ['minify', 'copy-static-files-minified']);
+    gulp.task('build-minify', ['build-app-minify', 'copy-minified-static-files']);
 };
