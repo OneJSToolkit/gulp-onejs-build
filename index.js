@@ -68,8 +68,16 @@ module.exports = {
             test: {
                 // Test files will live here
                 root: 'test/',
-                glob: 'test/**/*',
-                karmaConf: 'test/karma.conf.js'
+                unit: {
+                    root: 'test/unit/',
+                    glob: 'test/unit/*.ts'
+                },
+                functional: {
+                    root: 'test/functional/',
+                    glob: 'test/functional/*.ts'
+                },
+                glob: 'test/**/*.ts',
+                karmaConf: 'karma.conf.js'
             },
             typings: {
                 // This dir is to match up with the structure of tsd: https://github.com/DefinitelyTyped/tsd
