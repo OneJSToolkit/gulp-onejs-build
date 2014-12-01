@@ -74,7 +74,7 @@ module.exports = function(options) {
 
     /** Temporarily copies the built folder to a temp dir so it will persist
         when switching git branches that have different gitignores */
-    gulp.task('pre-release', ['dist'], function() {
+    gulp.task('pre-release', ['build-dist'], function() {
         return gulp.src(paths.dist.glob)
             .pipe(gulp.dest(paths.release.root));
     });
