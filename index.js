@@ -14,12 +14,13 @@ module.exports = {
             app: {
                 // A website would consume files in this dir
                 root: 'app/',
-                jsGlob: 'app/**/*.js',
+                jsGlob: 'app/**/!*.test.js',
                 test: 'app/test/',
                 min: {
                     root: 'app-min/'
                 }
             },
+            buildDeps: [],
             dist: {
                 // Distributable structure
                 root: 'dist/',
@@ -111,6 +112,11 @@ module.exports = {
             if (!options.gulp || !options.rootDir) {
                 console.log('Please provide your gulp and rootDir in the options!');
             }
+
+            // Mix in path options
+            this.paths.staticFiles.js = _.union(this.paths.staticFiles.js, options.appDeps);
+            this.paths.buildDeps = _.union(this.paths.buildDeps, options.buildDeps);
+
             return {
                 gulp: options.gulp,
                 rootDir: options.rootDir || __dirname,

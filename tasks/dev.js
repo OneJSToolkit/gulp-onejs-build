@@ -51,6 +51,12 @@ module.exports = function(options) {
             .pipe(gulp.dest(paths.app.root + 'onejs/'));
     });
 
+    /** Copies build dependencies to the temp path */
+    gulp.task('copy-build-deps', function() {
+        return gulp.src(paths.buildDeps)
+            .pipe(gulp.dest(paths.temp.ts));
+    });
+
     /** Runs LESS compiler, auto-prefixer, and uglify, then creates js modules and outputs to temp folder */
     gulp.task('build-less', function() {
         return gulp.src(paths.src.lessGlob)
@@ -85,7 +91,7 @@ module.exports = function(options) {
     });
 
     /** Runs the basic pre-processing steps before compilation */
-    gulp.task('build-app-preprocess', ['build-templates', 'copy-typescript', 'build-less', 'copy-onejs-dts', 'copy-typings-dts']);
+    gulp.task('build-app-preprocess', ['build-templates', 'copy-typescript', 'build-less', 'copy-onejs-dts', 'copy-typings-dts', 'copy-build-deps']);
 
     /** Runs the TypeScript amd compiler over your application .ts files */
     gulp.task('build-app-amd', ['build-app-preprocess'], function() {
