@@ -61,8 +61,20 @@ module.exports = function(options) {
         return tsResult.js.pipe(gulp.dest(paths.dist.commonjs));
     });
 
+    gulp.task('copy-dist-css', ['build-app-preprocess'], function() {
+        return gulp.src(paths.app.cssGlob)
+            .pipe(gulp.dest(paths.dist.amd))
+            .pipe(gulp.dest(paths.dist.commonjs));
+    });
+
+    gulp.task('copy-dist-templates', ['build-app-preprocess'], function() {
+        return gulp.src(paths.app.htmlGlob)
+            .pipe(gulp.dest(paths.dist.amd))
+            .pipe(gulp.dest(paths.dist.commonjs));
+    })
+
     /** Creates both dist flavors */
-    gulp.task('build-dist', ['build-dist-commonjs', 'build-dist-amd']);
+    gulp.task('build-dist', ['build-dist-commonjs', 'build-dist-amd', 'copy-dist-css', 'copy-dist-templates']);
 
     /**
      * This next section of tasks are intentionally a bunch of small tasks

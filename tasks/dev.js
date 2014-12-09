@@ -7,11 +7,12 @@ module.exports = function(options) {
     var del = require('del');
     var less = require('gulp-less');
     var cssMinify = require('gulp-minify-css');
-    var csstojs = require('gulp-csstojs');
     var postcss = require('gulp-postcss');
     var autoprefixer = require('autoprefixer-core');
     var _ = require('lodash');
     var flatten = require('gulp-flatten');
+    var texttojs = require('gulp-texttojs');
+    var htmlMinify = require('gulp-minify-html');
 
     var gulp = options.gulp;
     var paths = options.paths;
@@ -28,10 +29,13 @@ module.exports = function(options) {
         del([paths.temp.root], cb);
     });
 
-    /** Copies static (non-OneJS) js files to app path */
-    gulp.task('copy-static-js', function() {
-        return gulp.src(paths.staticFiles.js)
-            .pipe(gulp.dest(paths.app.root));
+    /** Copies app deps to their app path */
+    gulp.task('copy-app-deps', function(cb) {
+        _.map(paths.appDeps, function(value, key) {
+            gulp.src(key)
+                .pipe(gulp.dest(value));
+        });
+        cb();
     });
 
     gulp.task('copy-typings-dts', function() {
@@ -52,9 +56,12 @@ module.exports = function(options) {
     });
 
     /** Copies build dependencies to the temp path */
-    gulp.task('copy-build-deps', function() {
-        return gulp.src(paths.buildDeps)
-            .pipe(gulp.dest(paths.temp.ts));
+    gulp.task('copy-build-deps', function(cb) {
+        _.map(paths.buildDeps, function(value, key) {
+            gulp.src(key)
+                .pipe(gulp.dest(value));
+        });
+        cb();
     });
 
     /** Runs LESS compiler, auto-prefixer, and uglify, then creates js modules and outputs to temp folder */
@@ -63,24 +70,22 @@ module.exports = function(options) {
             .pipe(less())
             .pipe(postcss([autoprefixer(autoprefixerOptions)]))
             .pipe(cssMinify())
-            .pipe(csstojs({
-                typeScript: true
+            .pipe(texttojs({
+                template: "define(['onejs/DomUtils'], function(DomUtils) { DomUtils.loadStyles(<%= content %>); });"
             }))
             .pipe(flatten())
-            .pipe(gulp.dest(paths.temp.ts))
+            .pipe(gulp.dest(paths.app.root))
     });
 
     /** Compiles OneJS html templates */
     gulp.task('build-templates', function() {
         return gulp.src(paths.src.htmlGlob)
-            .pipe(onejsCompiler({
-                paths: {
-                    onejs: './onejs/',
-                    defaultView: '{{viewType}}'
-                }
+            .pipe(htmlMinify({
+                comments: true
             }))
+            .pipe(texttojs())
             .pipe(flatten())
-            .pipe(gulp.dest(paths.temp.ts));
+            .pipe(gulp.dest(paths.app.root));
     });
 
     /** Copies OneJS TypeScript files to temp directory for futher compilation */
@@ -91,7 +96,7 @@ module.exports = function(options) {
     });
 
     /** Runs the basic pre-processing steps before compilation */
-    gulp.task('build-app-preprocess', ['build-templates', 'copy-typescript', 'build-less', 'copy-onejs-dts', 'copy-typings-dts', 'copy-build-deps']);
+    gulp.task('build-app-preprocess', ['build-templates', 'copy-typescript', 'build-less', 'copy-onejs-dts', 'copy-typings-dts', 'copy-build-deps', 'copy-app-deps']);
 
     /** Runs the TypeScript amd compiler over your application .ts files */
     gulp.task('build-app-amd', ['build-app-preprocess'], function() {
@@ -115,7 +120,7 @@ module.exports = function(options) {
     });
 
     /** Default dev task for building */
-    gulp.task('build-app', ['build-app-amd', 'copy-static-js', 'copy-onejs-js']);
+    gulp.task('build-app', ['build-app-amd', 'copy-app-deps', 'copy-onejs-js']);
 
     /** Our default task, but can be overridden by the users gulp file */
     gulp.task('default', ['build-app']);

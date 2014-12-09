@@ -15,12 +15,15 @@ module.exports = {
                 // A website would consume files in this dir
                 root: 'app/',
                 jsGlob: 'app/**/!*.test.js',
+                cssGlob: 'app/**/*.css.js',
+                htmlGlob: 'app/*.html.js',
                 test: 'app/test/',
                 min: {
                     root: 'app-min/'
                 }
             },
-            buildDeps: [],
+            appDeps: {},
+            buildDeps: {},
             dist: {
                 // Distributable structure
                 root: 'dist/',
@@ -32,10 +35,10 @@ module.exports = {
             src: {
                 // The (non-test) source will live here
                 root: 'src/',
-                htmlGlob: 'src/**/*.html',
-                lessGlob: 'src/**/*.less',
-                tsGlob: 'src/**/*.ts',
-                glob: 'src/**/*'
+                htmlGlob: 'src/**/**/*.html',
+                lessGlob: 'src/**/**/*.less',
+                tsGlob: 'src/**/**/*.ts',
+                glob: 'src/**/**/*'
             },
             staticFiles: {
                 // Static files that may need to be copied/referenced
@@ -60,11 +63,11 @@ module.exports = {
                 // Temp staging dir for building
                 root: 'temp/',
                 ts: 'temp/ts/',
-                test: 'temp/ts/',
+                test: 'temp/ts/test/',
                 testGlob: 'temp/ts/(*.test.ts|*.Test.ts)',
                 typings: 'temp/ts/typings/',
                 typingsGlob: 'temp/ts/typings/**/*.d.ts',
-                tsGlob: 'temp/ts/**/**/*.ts'
+                tsGlob: 'temp/ts/**/**/*.ts',
             },
             test: {
                 // Test files will live here
@@ -114,8 +117,8 @@ module.exports = {
             }
 
             // Mix in path options
-            this.paths.staticFiles.js = _.union(this.paths.staticFiles.js, options.appDeps);
-            this.paths.buildDeps = _.union(this.paths.buildDeps, options.buildDeps);
+            this.paths.appDeps = _.merge(this.paths.appDeps, options.appDeps);
+            this.paths.buildDeps = _.merge(this.paths.buildDeps, options.buildDeps);
 
             return {
                 gulp: options.gulp,

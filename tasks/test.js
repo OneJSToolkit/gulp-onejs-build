@@ -18,7 +18,7 @@ module.exports = function(options) {
             .pipe(gulp.dest(paths.temp.test));
     });
 
-    gulp.task('build-test', ['build-test-preprocess', 'build-app-preprocess', 'build-app-amd', 'copy-static-js', 'copy-onejs-js']);
+    gulp.task('build-test', ['build-test-preprocess', 'build-app-preprocess', 'build-app-amd', 'copy-app-deps', 'copy-onejs-js']);
 
     gulp.task('test', ['build-test', 'build-app'], function (done) {
         karma.start(_.merge({
