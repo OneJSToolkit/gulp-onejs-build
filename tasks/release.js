@@ -43,7 +43,7 @@ module.exports = function(options) {
 
     /** Creates the amd distributable directory */
     gulp.task('build-dist-amd', ['build-app-preprocess'], function() {
-        var tsResult = gulp.src(paths.temp.tsGlob)
+        var tsResult = gulp.src(paths.temp.srcGlob)
             // Allow tscOption overrides, but ensure that we're targeting amd
             .pipe(tsc(_.merge(tscOptions, {module: 'amd', declarationFiles: true})));
 
@@ -53,7 +53,7 @@ module.exports = function(options) {
 
     /** Creates the commonjs distributable directory */
     gulp.task('build-dist-commonjs', ['build-app-preprocess'], function() {
-        var tsResult = gulp.src(paths.temp.tsGlob)
+        var tsResult = gulp.src(paths.temp.srcGlob)
             // Allow tscOption overrides, but ensure that we're targeting commonjs
             .pipe(tsc(_.merge(tscOptions, {module: 'commonjs', declarationFiles: true})));
 

@@ -18,12 +18,12 @@ module.exports = {
                 cssGlob: 'app/**/*.css.js',
                 htmlGlob: 'app/*.html.js',
                 test: 'app/test/',
+                distGlob: 'app/*.js',
                 min: {
                     root: 'app-min/'
                 }
             },
-            appDeps: {},
-            buildDeps: {},
+            deps: {},
             dist: {
                 // Distributable structure
                 root: 'dist/',
@@ -68,6 +68,7 @@ module.exports = {
                 typings: 'temp/ts/typings/',
                 typingsGlob: 'temp/ts/typings/**/*.d.ts',
                 tsGlob: 'temp/ts/**/**/*.ts',
+                srcGlob: 'temp/test/**/**/!(*.test.ts)',
             },
             test: {
                 // Test files will live here
@@ -117,8 +118,7 @@ module.exports = {
             }
 
             // Mix in path options
-            this.paths.appDeps = _.merge(this.paths.appDeps, options.appDeps);
-            this.paths.buildDeps = _.merge(this.paths.buildDeps, options.buildDeps);
+            this.paths.deps = _.merge(this.paths.deps, options.deps);
 
             return {
                 gulp: options.gulp,
