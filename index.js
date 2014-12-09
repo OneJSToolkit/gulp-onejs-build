@@ -68,7 +68,7 @@ module.exports = {
                 typings: 'temp/ts/typings/',
                 typingsGlob: 'temp/ts/typings/**/*.d.ts',
                 tsGlob: 'temp/ts/**/**/*.ts',
-                srcGlob: 'temp/test/**/**/!(*.test.ts)',
+                srcGlob: 'temp/ts/**/**/!(*.test.ts)',
             },
             test: {
                 // Test files will live here
