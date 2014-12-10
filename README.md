@@ -31,8 +31,7 @@ As show in the example above, there are options that you can pass while register
 | karma | false (for test) | Pass in your local karma instance so tests can be ran properly |
 | autoprefixerOptions | true | We use [gulp-autoprefixer](https://github.com/sindresorhus/gulp-autoprefixer) to help simplify our LESS/CSS, feel free to pass in your options to autoprefixer as defined by the module itself |
 | tscOptions | true | Options for [gulp-typescript](https://github.com/ivogabe/gulp-typescript) |
-| appDeps | true | An array of globs that will be copied to the app/ path at build time |
-| buildDeps | true | An array of globs that will be copied to the temp/ts/ path at build time |
+| deps | true | A map of src globs to dest paths for the build process to copy over before build time |
 
 ## 4 flavors of gulp tasks
 You can register all, or just a subset of the available gulp tasks.
