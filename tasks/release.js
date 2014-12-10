@@ -35,7 +35,7 @@ module.exports = function(options) {
     });
 
     /** Copies the minified static files to your application path */
-    gulp.task('copy-minified-static-files', function() {
+    gulp.task('copy-minified-static-files', ['clean'], function() {
         return gulp.src(paths.staticFiles.js)
             .pipe(uglify())
             .pipe(gulp.dest(paths.app.min.root));

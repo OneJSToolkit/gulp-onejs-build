@@ -30,7 +30,7 @@ module.exports = function(options) {
     });
 
     /** Copies app deps to their app path */
-    gulp.task('copy-app-deps', function(cb) {
+    gulp.task('copy-app-deps', ['clean'], function(cb) {
         _.map(paths.deps, function(value, key) {
             gulp.src(key)
                 .pipe(gulp.dest(value));
@@ -38,25 +38,25 @@ module.exports = function(options) {
         cb();
     });
 
-    gulp.task('copy-typings-dts', function() {
+    gulp.task('copy-typings-dts', ['clean'], function() {
         return gulp.src(paths.typings.glob)
             .pipe(gulp.dest(paths.temp.typings));
     });
 
     /** Copies .d.ts files from OneJS to temp path to compile against */
-    gulp.task('copy-onejs-dts', function() {
+    gulp.task('copy-onejs-dts', ['clean'], function() {
         return gulp.src(paths.onejsFiles.dts)
             .pipe(gulp.dest(paths.temp.ts + 'onejs/'));
     });
 
     /** Copies static OneJS js files to app path */
-    gulp.task('copy-onejs-js', function() {
+    gulp.task('copy-onejs-js', ['clean'], function() {
         return gulp.src(paths.onejsFiles.js)
             .pipe(gulp.dest(paths.app.root + 'onejs/'));
     });
 
     /** Runs LESS compiler, auto-prefixer, and uglify, then creates js modules and outputs to temp folder */
-    gulp.task('build-less', function() {
+    gulp.task('build-less', ['clean'], function() {
         return gulp.src(paths.src.lessGlob)
             .pipe(less())
             .pipe(postcss([autoprefixer(autoprefixerOptions)]))
@@ -69,7 +69,7 @@ module.exports = function(options) {
     });
 
     /** Compiles OneJS html templates */
-    gulp.task('build-templates', function() {
+    gulp.task('build-templates', ['clean'], function() {
         return gulp.src(paths.src.htmlGlob)
             .pipe(htmlMinify({
                 comments: true
@@ -80,14 +80,14 @@ module.exports = function(options) {
     });
 
     /** Copies OneJS TypeScript files to temp directory for futher compilation */
-    gulp.task('copy-typescript', function() {
+    gulp.task('copy-typescript', ['clean'], function() {
         return gulp.src(paths.src.tsGlob)
             .pipe(flatten())
             .pipe(gulp.dest(paths.temp.ts));
     });
 
     /** Runs the basic pre-processing steps before compilation */
-    gulp.task('build-app-preprocess', ['build-templates', 'copy-typescript', 'build-less', 'copy-onejs-dts', 'copy-typings-dts', 'copy-app-deps']);
+    gulp.task('build-app-preprocess', ['build-templates', 'copy-typescript', 'build-less', 'copy-onejs-dts', 'copy-typings-dts', 'copy-app-deps', 'copy-onejs-js']);
 
     /** Runs the TypeScript amd compiler over your application .ts files */
     gulp.task('build-app-amd', ['build-app-preprocess'], function() {
@@ -111,7 +111,7 @@ module.exports = function(options) {
     });
 
     /** Default dev task for building */
-    gulp.task('build-app', ['build-app-amd', 'copy-app-deps', 'copy-onejs-js']);
+    gulp.task('build-app', ['build-app-amd']);
 
     /** Our default task, but can be overridden by the users gulp file */
     gulp.task('default', ['build-app']);

@@ -12,7 +12,7 @@ module.exports = function(options) {
     var karmaOptions = options.karmaOptions;
     var tscOptions = options.tscOptions;
 
-    gulp.task('build-test-preprocess', function() {
+    gulp.task('build-test-preprocess', ['clean'], function() {
         return gulp.src(paths.test.glob)
             .pipe(flatten())
             .pipe(gulp.dest(paths.temp.test));
