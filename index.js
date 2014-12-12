@@ -14,11 +14,11 @@ module.exports = {
             app: {
                 // A website would consume files in this dir
                 root: 'app/',
-                jsGlob: 'app/**/!*.test.js',
-                cssGlob: 'app/**/*.css.js',
-                htmlGlob: 'app/*.html.js',
+                jsGlob: 'app/**/**/**/!*.test.js',
+                cssGlob: 'app/**/**/**/*.css.js',
+                htmlGlob: 'app/**/**/**/*.html.js',
                 test: 'app/test/',
-                distGlob: 'app/*.js',
+                distGlob: 'app/**/**/**/*.js',
                 min: {
                     root: 'app-min/'
                 }
@@ -29,7 +29,7 @@ module.exports = {
                 root: 'dist/',
                 amd: 'dist/amd/',
                 commonjs: 'dist/commonjs/',
-                glob: 'dist/**/**/*',
+                glob: 'dist/**/**/**/*',
                 gitGlob: 'dist/*'
             },
             src: {
@@ -57,7 +57,7 @@ module.exports = {
                 // These are temp directories that are only used when
                 // publishing to a dist branch
                 root: 'releaseTemp/',
-                glob: 'releaseTemp/**/**/*'
+                glob: 'releaseTemp/**/**/**/*'
             },
             temp: {
                 // Temp staging dir for building
