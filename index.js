@@ -35,10 +35,10 @@ module.exports = {
             src: {
                 // The (non-test) source will live here
                 root: 'src/',
-                htmlGlob: 'src/**/**/*.html',
-                lessGlob: 'src/**/**/*.less',
-                tsGlob: 'src/**/**/*.ts',
-                glob: 'src/**/**/*'
+                htmlGlob: 'src/**/**/**/*.html',
+                lessGlob: 'src/**/**/**/*.less',
+                tsGlob: 'src/**/**/**/*.ts',
+                glob: 'src/**/**/**/*'
             },
             staticFiles: {
                 // Static files that may need to be copied/referenced
@@ -62,13 +62,12 @@ module.exports = {
             temp: {
                 // Temp staging dir for building
                 root: 'temp/',
-                ts: 'temp/ts/',
-                test: 'temp/ts/test/',
-                testGlob: 'temp/ts/(*.test.ts|*.Test.ts)',
-                typings: 'temp/ts/typings/',
-                typingsGlob: 'temp/ts/typings/**/*.d.ts',
-                tsGlob: 'temp/ts/**/**/*.ts',
-                srcGlob: 'temp/ts/**/**/!(*.test.ts)',
+                test: 'temp/test/',
+                testGlob: 'temp/(*.test.ts|*.Test.ts)',
+                typings: 'temp/typings/',
+                typingsGlob: 'temp/typings/**/*.d.ts',
+                tsGlob: 'temp/**/**/*.ts',
+                srcGlob: 'temp/**/**/**/!(*.test.ts|*.js)',
             },
             test: {
                 // Test files will live here

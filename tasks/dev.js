@@ -10,7 +10,6 @@ module.exports = function(options) {
     var postcss = require('gulp-postcss');
     var autoprefixer = require('autoprefixer-core');
     var _ = require('lodash');
-    var flatten = require('gulp-flatten');
     var texttojs = require('gulp-texttojs');
     var htmlMinify = require('gulp-minify-html');
 
@@ -32,21 +31,28 @@ module.exports = function(options) {
     /** Copies app deps to their app path */
     gulp.task('copy-app-deps', ['clean'], function(cb) {
         _.map(paths.deps, function(value, key) {
-            gulp.src(key)
-                .pipe(gulp.dest(value));
+            if (value instanceof Array) {
+                _.map(value, function(v, k) {
+                    gulp.src(key)
+                        .pipe(gulp.dest(v));
+                });
+            } else {
+                gulp.src(key)
+                    .pipe(gulp.dest(value));
+            }
         });
         cb();
     });
 
     gulp.task('copy-typings-dts', ['clean'], function() {
         return gulp.src(paths.typings.glob)
-            .pipe(gulp.dest(paths.temp.typings));
+            .pipe(gulp.dest(paths.temp.root));
     });
 
     /** Copies .d.ts files from OneJS to temp path to compile against */
     gulp.task('copy-onejs-dts', ['clean'], function() {
         return gulp.src(paths.onejsFiles.dts)
-            .pipe(gulp.dest(paths.temp.ts + 'onejs/'));
+            .pipe(gulp.dest(paths.temp.root + 'onejs/'));
     });
 
     /** Copies static OneJS js files to app path */
@@ -64,7 +70,6 @@ module.exports = function(options) {
             .pipe(texttojs({
                 template: "define(['onejs/DomUtils'], function(DomUtils) { DomUtils.loadStyles(<%= content %>); });"
             }))
-            .pipe(flatten())
             .pipe(gulp.dest(paths.app.root))
     });
 
@@ -75,15 +80,13 @@ module.exports = function(options) {
                 comments: true
             }))
             .pipe(texttojs())
-            .pipe(flatten())
             .pipe(gulp.dest(paths.app.root));
     });
 
     /** Copies OneJS TypeScript files to temp directory for futher compilation */
     gulp.task('copy-typescript', ['clean'], function() {
         return gulp.src(paths.src.tsGlob)
-            .pipe(flatten())
-            .pipe(gulp.dest(paths.temp.ts));
+            .pipe(gulp.dest(paths.temp.root));
     });
 
     /** Runs the basic pre-processing steps before compilation */

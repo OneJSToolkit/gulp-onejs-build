@@ -2,7 +2,6 @@
 
 module.exports = function(options) {
     var tsc = require('gulp-typescript');
-    var flatten = require('gulp-flatten');
     var _ = require('lodash');
 
     var karma = options.karma;
@@ -14,7 +13,6 @@ module.exports = function(options) {
 
     gulp.task('build-test-preprocess', ['clean'], function() {
         return gulp.src(paths.test.glob)
-            .pipe(flatten())
             .pipe(gulp.dest(paths.temp.test));
     });
 
