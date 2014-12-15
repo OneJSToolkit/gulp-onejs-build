@@ -87,11 +87,11 @@ module.exports = function(options) {
 
     /** Copies OneJS TypeScript files to temp directory for futher compilation */
     gulp.task('copy-typescript', ['nuke'], function() {
-        console.log(tsLintOptions);
+        console.log('Running tslint (using tslint.json) refer to https://github.com/palantir/tslint for more details on each rule.');
         return gulp.src(paths.src.tsGlob)
+            .pipe(gulp.dest(paths.temp.root))
             .pipe(tslint(tsLintOptions))
-            .pipe(tslint.report('verbose'))
-            .pipe(gulp.dest(paths.temp.root));
+            .pipe(tslint.report('verbose'));
     });
 
     /** Runs the basic pre-processing steps before compilation */
