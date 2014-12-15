@@ -173,7 +173,7 @@ module.exports = function(options) {
     /** Copies the meta files (package/bower.json) to their rightful location */
     gulp.task('copy-meta-dist-bits', ['checkout-dist'], function() {
         return gulp.src(paths.release.metaGlob)
-            .pipe(gulp.dest('/'));
+            .pipe(gulp.dest(rootDir));
     })
 
     /** Removes the temporary dist files */
