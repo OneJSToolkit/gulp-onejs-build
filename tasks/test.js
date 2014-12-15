@@ -3,6 +3,7 @@
 module.exports = function(options) {
     var tsc = require('gulp-typescript');
     var _ = require('lodash');
+    var tslint = require('gulp-tslint');
 
     var karma = options.karma;
     var gulp = options.gulp;
