@@ -13,6 +13,7 @@ module.exports = function(options) {
     var texttojs = require('gulp-texttojs');
     var htmlMinify = require('gulp-minify-html');
     var tslint = require('gulp-tslint');
+    var gutil = require('gulp-util');
 
     var gulp = options.gulp;
     var paths = options.paths;
@@ -22,7 +23,13 @@ module.exports = function(options) {
 
     /** Removes all built files, keeping only source */
     gulp.task('nuke', function(cb) {
-        del([paths.temp.root, paths.app.root, paths.app.min.root, paths.dist.root], cb);
+        del([
+            paths.temp.root,
+            paths.app.root,
+            paths.app.min.root,
+            paths.dist.root,
+            paths.release.root
+        ], cb);
     });
 
     /** Cleans the temporary folders */
@@ -87,7 +94,7 @@ module.exports = function(options) {
 
     /** Copies OneJS TypeScript files to temp directory for futher compilation */
     gulp.task('copy-typescript', ['nuke'], function() {
-        console.log('Running tslint (using tslint.json) refer to https://github.com/palantir/tslint for more details on each rule.');
+        gutil.log(gutil.colors.gray('Running tslint (using tslint.json) refer to https://github.com/palantir/tslint for more details on each rule.'));
         return gulp.src(paths.src.tsGlob)
             .pipe(gulp.dest(paths.temp.root))
             .pipe(tslint(tsLintOptions))

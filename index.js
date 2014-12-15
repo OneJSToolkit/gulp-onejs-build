@@ -31,6 +31,7 @@ module.exports = {
                 amd: 'dist/amd/',
                 commonjs: 'dist/commonjs/',
                 glob: 'dist/**/**/**/*',
+                metaGlob: ['package.json', 'bower.json'],
                 gitGlob: 'dist/*'
             },
             src: {
@@ -58,7 +59,9 @@ module.exports = {
                 // These are temp directories that are only used when
                 // publishing to a dist branch
                 root: 'releaseTemp/',
-                glob: 'releaseTemp/**/**/**/*'
+                dist: 'releaseTemp/dist/',
+                distGlob: 'releaseTemp/dist/**/**/**/*',
+                metaGlob: 'releaseTemp/*.json',
             },
             temp: {
                 // Temp staging dir for building

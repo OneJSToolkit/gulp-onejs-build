@@ -12,6 +12,7 @@ module.exports = function(options) {
     var fs = require('fs');
     var del = require('del');
     var _ = require('lodash');
+    var gutil = require('gulp-util');
 
     var gulp = options.gulp;
     var paths = options.paths;
@@ -20,8 +21,6 @@ module.exports = function(options) {
 
     var bumpType;
     var newVersion;
-    var bumpNpm = false;
-    var bumpBower = false;
 
     /** Creates a minified version of your application */
     gulp.task('build-app-minify', ['build-app-amd'], function() {
@@ -88,35 +87,28 @@ module.exports = function(options) {
         when switching git branches that have different gitignores */
     gulp.task('pre-release', ['build-dist'], function() {
         return gulp.src(paths.dist.glob)
+            .pipe(gulp.dest(paths.release.dist));
+    });
+
+    gulp.task('pre-release-meta', ['build-dist'], function() {
+        return gulp.src(paths.dist.metaGlob)
             .pipe(gulp.dest(paths.release.root));
     });
 
     /** Prompts the user for info about the version */
-    gulp.task('prompt-release', ['pre-release'], function() {
+    gulp.task('prompt-release', ['pre-release', 'pre-release-meta'], function() {
         var questions = [
             {
                 type: 'list',
                 name: 'bumpType',
                 message: 'What type of version bump is this?',
                 choices: ['Major', 'Minor', 'Patch']
-            },
-            {
-                type: 'confirm',
-                name: 'bumpNpm',
-                message: 'Are you publishing to npm?'
-            },
-            {
-                type: 'confirm',
-                name: 'bumpBower',
-                message: 'Are you publishing to bower?'
             }
         ];
 
         return gulp.src(paths.staticFiles.npmPackage)
             .pipe(prompt.prompt(questions, function(answers) {
                 bumpType = answers.bumpType;
-                bumpNpm = !!answers.bumpNpm;
-                bumpBower = !!answers.bumpBower;
                 writeUpdatedVersionNumbers();
             }));
     });
@@ -126,14 +118,25 @@ module.exports = function(options) {
         var packageJson;
         var bowerJson;
 
-        if (bumpNpm) {
+        try {
             packageJson = JSON.parse(fs.readFileSync(paths.staticFiles.npmPackage, 'utf8'));
+            bowerJson = JSON.parse(fs.readFileSync(paths.staticFiles.bowerPackage, 'utf8'));
+        } catch (e) {
+            // Do nothing, we just won't write to the files that don't exist
+        }
+
+        if (packageJson && bowerJson && (packageJson.version !== bowerJson.version)) {
+            gutil.log(gutil.colors.red('Your package.json and bower.json files have different version numbers.'));
+            gutil.log(gutil.colors.red('Please reconcile the version numbers and rerun `gulp release`.'));
+            process.exit(1);
+        }
+
+        if (packageJson) {
             newVersion = semver.inc(packageJson.version, bumpType.toLowerCase());
             packageJson.version = newVersion;
             fs.writeFileSync(paths.staticFiles.npmPackage, JSON.stringify(packageJson, null, 2));
         }
-        if (bumpBower) {
-            bowerJson = JSON.parse(fs.readFileSync(paths.staticFiles.bowerPackage, 'utf8'));
+        if (bowerJson) {
             if (!newVersion) {
                 newVersion = semver.inc(bowerJson.version, bumpType.toLowerCase());
             }
@@ -163,12 +166,18 @@ module.exports = function(options) {
 
     /** Copies the dist files to their rightful location */
     gulp.task('copy-dist-bits', ['checkout-dist'], function() {
-        return gulp.src(paths.release.glob)
+        return gulp.src(paths.release.distGlob)
             .pipe(gulp.dest(paths.dist.root));
     });
 
+    /** Copies the meta files (package/bower.json) to their rightful location */
+    gulp.task('copy-meta-dist-bits', ['checkout-dist'], function() {
+        return gulp.src(paths.release.metaGlob)
+            .pipe(gulp.dest('/'));
+    })
+
     /** Removes the temporary dist files */
-    gulp.task('clean-temp-bits', ['copy-dist-bits'], function(cb) {
+    gulp.task('clean-temp-bits', ['copy-dist-bits', 'copy-meta-dist-bits'], function(cb) {
         del([paths.release.root], cb);
     });
 
@@ -201,8 +210,9 @@ module.exports = function(options) {
 
     /** The main task for bumping versions and publishing to dist branch */
     gulp.task('release', ['checkout-master'], function() {
-        console.log('Version bumped, please run `git push --tags` and `npm/bower publish` to make updates available.');
-    });;
+        gutil.log(gutil.colors.green('Version bumped!');
+        gutil.log(gutil.colors.green('Please run `git push --follow-tags` and `npm/bower publish` to make updates available.');
+    });
 
     /** Builds the minified version of your app */
     gulp.task('build-minify', ['build-app-minify', 'copy-minified-static-files']);
