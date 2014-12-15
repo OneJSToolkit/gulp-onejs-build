@@ -6,6 +6,7 @@ var devTasks = require('./tasks/dev.js');
 var releaseTasks = require('./tasks/release.js');
 var testTasks = require('./tasks/test.js');
 var _ = require('lodash');
+var fs = require('fs');
 
 module.exports = {
     gulpTasks: {
@@ -126,7 +127,11 @@ module.exports = {
                 karma: options.karma,
                 autoprefixerOptions: options.autoprefixerOptions || {},
                 // Set our default to target ES5, but allow overrides from the user
-                tscOptions: _.merge({target: 'ES5'}, options.tscOptions)
+                tscOptions: _.merge({target: 'ES5'}, options.tscOptions),
+                tsLintOptions: options.tsLintOptions || {
+                        // Use the default tslint we have set up if no options passed
+                        configuration: JSON.parse(fs.readFileSync(__dirname + '/tslint.json'))
+                    },
             }
         }
     }
