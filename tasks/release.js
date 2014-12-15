@@ -211,7 +211,7 @@ module.exports = function(options) {
     /** The main task for bumping versions and publishing to dist branch */
     gulp.task('release', ['checkout-master'], function() {
         gutil.log(gutil.colors.green('Version bumped!'));
-        gutil.log(gutil.colors.green('Please run `git push --follow-tags` and `npm/bower publish` to make updates available.'));
+        gutil.log(gutil.colors.green('Please run `git push --follow-tags` and `git push --tags` and `npm/bower publish` to make updates available.'));
     });
 
     /** Builds the minified version of your app */
