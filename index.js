@@ -135,6 +135,7 @@ module.exports = {
                         // Use the default tslint we have set up if no options passed
                         configuration: JSON.parse(fs.readFileSync(__dirname + '/tslint.json'))
                     },
+                gulpTaskOptions: options.gulpTaskOptions || {},
             }
         }
     }

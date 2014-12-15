@@ -20,6 +20,7 @@ module.exports = function(options) {
     var autoprefixerOptions = options.autoprefixerOptions;
     var tscOptions = options.tscOptions;
     var tsLintOptions = options.tsLintOptions;
+    var gulpTaskOptions = options.gulpTaskOptions;
 
     /** Removes all built files, keeping only source */
     gulp.task('nuke', function(cb) {
@@ -102,7 +103,7 @@ module.exports = function(options) {
     });
 
     /** Runs the basic pre-processing steps before compilation */
-    gulp.task('build-app-preprocess', ['build-templates', 'copy-typescript', 'build-less', 'copy-onejs-dts', 'copy-typings-dts', 'copy-app-deps', 'copy-onejs-js']);
+    gulp.task('build-app-preprocess', _.union(['build-templates', 'copy-typescript', 'build-less', 'copy-onejs-dts', 'copy-typings-dts', 'copy-app-deps', 'copy-onejs-js'], gulpTaskOptions['build-app-preprocess']));
 
     /** Runs the TypeScript amd compiler over your application .ts files */
     gulp.task('build-app-amd', ['build-app-preprocess'], function() {
