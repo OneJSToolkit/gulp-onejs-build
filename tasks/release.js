@@ -165,30 +165,30 @@ module.exports = function(options) {
         });
     });
 
+    /** Cleans the dist folder before adding the new bits in */
+    gulp.task('clean-dist', _.union(['checkout-dist'], gulpTaskOptions['clean-dist']), function(cb) {
+        del([paths.dist.gitGlob], cb);
+    });
+
     /** Copies the dist files to their rightful location */
-    gulp.task('copy-dist-bits', _.union(['checkout-dist'], gulpTaskOptions['copy-dist-bits']), function() {
+    gulp.task('copy-dist-bits', _.union(['clean-dist'], gulpTaskOptions['copy-dist-bits']), function() {
         return gulp.src(paths.release.distGlob)
             .pipe(gulp.dest(paths.dist.root));
     });
 
     /** Copies the meta files (package/bower.json) to their rightful location */
-    gulp.task('copy-meta-dist-bits', _.union(['checkout-dist'], gulpTaskOptions['copy-meta-dist-bits']), function() {
+    gulp.task('copy-meta-dist-bits', _.union(['clean-dist'], gulpTaskOptions['copy-meta-dist-bits']), function() {
         return gulp.src(paths.release.metaGlob)
             .pipe(gulp.dest(rootDir));
     })
 
-    /** Removes the temporary dist files */
+    /** Removes the temporary dist files after copying the new bits */
     gulp.task('clean-temp-bits', _.union(['copy-dist-bits', 'copy-meta-dist-bits'], gulpTaskOptions['clean-temp-bits']), function(cb) {
         del([paths.release.root], cb);
     });
 
-    /** Writes the bower and npm package files with new version number */
-    gulp.task('write-version-updates', _.union(['clean-temp-bits'], gulpTaskOptions['write-version-updates']), function() {
-        return writeUpdatedVersionNumbers();
-    });
-
     /** Commits the bower/npm package files and the dist folder */
-    gulp.task('commit-dist', _.union(['write-version-updates'], gulpTaskOptions['commit-dist']), function() {
+    gulp.task('commit-dist', _.union(['clean-temp-bits'], gulpTaskOptions['commit-dist']), function() {
         return gulp.src([paths.staticFiles.npmPackage, paths.staticFiles.bowerPackage, paths.dist.gitGlob])
             .pipe(git.commit(generateBumpMessage()));
     });
