@@ -90,7 +90,7 @@ module.exports = function(options) {
             {
                 type: 'confirm',
                 name: 'isConfirmed',
-                message: 'This task will create, tag, and release a new version of your repo based on your current version of master.\nEnsure you have already pulled the latest version of master or else you may be publishing old bits!\nDo you want to continue?',
+                message: 'This task will create, tag, and release a new version of your repo based on your current branch.\nEnsure you have already pulled the latest version of your current branch and dist branch or else you may be publishing old bits!\nDo you want to continue?',
             },
             {
                 type: 'list',
@@ -163,16 +163,20 @@ module.exports = function(options) {
         return 'Version bump to ' + newVersion;
     }
 
-    /** Commits the npm and bower packages on master */
-    gulp.task('commit-master', _.union(['prompt-release'], gulpTaskOptions['commit-master']), function() {
+    /** Commits the npm and bower packages with bumped versions */
+    gulp.task('commit-bumped-versions', _.union(['prompt-release'], gulpTaskOptions['commit-bumped-versions']), function() {
         return gulp.src([rootDir + '/' + paths.staticFiles.npmPackage, rootDir + '/' + paths.staticFiles.bowerPackage])
             .pipe(git.commit(generateBumpMessage()));
     });
 
     /** Checks out the git dist branch */
-    gulp.task('checkout-dist', _.union(['commit-master'], gulpTaskOptions['checkout-dist']), function(cb) {
+    gulp.task('checkout-dist', _.union(['commit-bumped-versions'], gulpTaskOptions['checkout-dist']), function(cb) {
         git.checkout('dist', function(err) {
-            if (err) { return cb(err); }
+            if (err) {
+                gutil.log(gutil.colors.red('No dist branch found locally, can\'t complete release task.'));
+                process.exit(1);
+                return cb(err);
+            }
             cb();
         });
     });
@@ -208,21 +212,18 @@ module.exports = function(options) {
     /** Creates a git tag with the new version number */
     gulp.task('write-dist-tag', _.union(['commit-dist'], gulpTaskOptions['write-dist-tag']), function(cb) {
         return git.tag('v' + newVersion, generateBumpMessage(), function(err) {
-            if (err) { return cb(err); }
-            cb();
-        });
-    });
-
-    /** Checks out back to master branch */
-    gulp.task('checkout-master', _.union(['write-dist-tag'], gulpTaskOptions['checkout-master']), function(cb) {
-        return git.checkout('master', function(err) {
-            if (err) { return cb(err); }
+            if (err) {
+                gutil.log(gutil.colors.red('Error while writing the new tag. Can\'t complete release task, your branches may be in an unsafe state!'));
+                gutil.log(gutil.colors.red(err));
+                process.exit(1);
+                return cb(err);
+            }
             cb();
         });
     });
 
     /** The main task for bumping versions and publishing to dist branch */
-    gulp.task('release', _.union(['checkout-master'], gulpTaskOptions['release']), function() {
+    gulp.task('release', _.union(['write-dist-tag'], gulpTaskOptions['release']), function() {
         gutil.log(gutil.colors.green('Version bumped!'));
         gutil.log(gutil.colors.green('Please run `git push --follow-tags` and `git push --tags` and `npm/bower publish` to make updates available.'));
     });
