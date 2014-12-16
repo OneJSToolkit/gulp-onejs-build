@@ -84,34 +84,46 @@ module.exports = function(options) {
      * of the node fs methods.
      */
 
-    /** Temporarily copies the built folder to a temp dir so it will persist
-        when switching git branches that have different gitignores */
-    gulp.task('pre-release', _.union(['build-dist'], gulpTaskOptions['pre-release']), function() {
-        return gulp.src(paths.dist.glob)
-            .pipe(gulp.dest(paths.release.dist));
-    });
-
-    gulp.task('pre-release-meta', _.union(['build-dist'], gulpTaskOptions['pre-release-meta']), function() {
-        return gulp.src(paths.dist.metaGlob)
-            .pipe(gulp.dest(paths.release.root));
-    });
-
     /** Prompts the user for info about the version */
-    gulp.task('prompt-release', _.union(['pre-release', 'pre-release-meta'], gulpTaskOptions['prompt-release']), function() {
+    gulp.task('prompt-release', _.union(['build-dist'], gulpTaskOptions['prompt-release']), function() {
         var questions = [
+            {
+                type: 'confirm',
+                name: 'isConfirmed',
+                message: 'This task will create, tag, and release a new version of your repo based on your current version of master.\nEnsure you have already pulled the latest version of master or else you may be publishing old bits!\nDo you want to continue?',
+            },
             {
                 type: 'list',
                 name: 'bumpType',
                 message: 'What type of version bump is this?',
-                choices: ['Major', 'Minor', 'Patch']
+                choices: ['Major', 'Minor', 'Patch'],
+                when: function(answers) {
+                    return !!answers.isConfirmed;
+                }
             }
         ];
 
         return gulp.src(paths.staticFiles.npmPackage)
             .pipe(prompt.prompt(questions, function(answers) {
+                if (!answers.isConfirmed) {
+                    gutil.log(gutil.colors.red('Release cancelled. No tags written.'));
+                    process.exit(1);
+                }
                 bumpType = answers.bumpType;
                 writeUpdatedVersionNumbers();
             }));
+    });
+
+    /** Temporarily copies the built folder to a temp dir so it will persist
+        when switching git branches that have different gitignores */
+    gulp.task('pre-release', _.union(['prompt-release'], gulpTaskOptions['pre-release']), function() {
+        return gulp.src(paths.dist.glob)
+            .pipe(gulp.dest(paths.release.dist));
+    });
+
+    gulp.task('pre-release-meta', _.union(['prompt-release'], gulpTaskOptions['pre-release-meta']), function() {
+        return gulp.src(paths.dist.metaGlob)
+            .pipe(gulp.dest(paths.release.root));
     });
 
     /** Helper function to bump the version number and write it to the npm package and bower files */
