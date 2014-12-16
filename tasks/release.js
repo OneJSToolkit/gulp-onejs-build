@@ -164,7 +164,7 @@ module.exports = function(options) {
     }
 
     /** Commits the npm and bower packages with bumped versions */
-    gulp.task('commit-bumped-versions', _.union(['prompt-release'], gulpTaskOptions['commit-bumped-versions']), function() {
+    gulp.task('commit-bumped-versions', _.union(['pre-release', 'pre-release-meta'], gulpTaskOptions['commit-bumped-versions']), function() {
         return gulp.src([rootDir + '/' + paths.staticFiles.npmPackage, rootDir + '/' + paths.staticFiles.bowerPackage])
             .pipe(git.commit(generateBumpMessage()));
     });
