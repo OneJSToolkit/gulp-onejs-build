@@ -33,10 +33,8 @@ module.exports = function(options) {
         ], cb);
     });
 
-    /** Cleans the temporary folders */
-    gulp.task('clean', function(cb) {
-        del([paths.temp.root], cb);
-    });
+    /** Symlink for nuke */
+    gulp.task('clean', ['nuke']);
 
     /** Copies app deps to their app path */
     gulp.task('copy-app-deps', ['nuke'], function(cb) {

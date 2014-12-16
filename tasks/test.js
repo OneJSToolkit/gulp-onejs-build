@@ -13,7 +13,7 @@ module.exports = function(options) {
     var tscOptions = options.tscOptions;
     var tsLintOptions = options.tsLintOptions;
 
-    gulp.task('build-test-preprocess', ['clean'], function() {
+    gulp.task('build-test-preprocess', ['nuke'], function() {
         return gulp.src(paths.test.glob)
             .pipe(gulp.dest(paths.temp.test))
             .pipe(tslint(tsLintOptions))
