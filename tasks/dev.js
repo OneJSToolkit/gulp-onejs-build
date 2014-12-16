@@ -37,7 +37,7 @@ module.exports = function(options) {
     gulp.task('clean', ['nuke']);
 
     /** Copies app deps to their app path */
-    gulp.task('copy-app-deps', ['nuke'], function(cb) {
+    gulp.task('copy-app-deps', _.union(['nuke'], gulpTaskOptions['copy-app-deps']), function(cb) {
         _.map(paths.deps, function(value, key) {
             if (value instanceof Array) {
                 _.map(value, function(v, k) {
@@ -52,25 +52,8 @@ module.exports = function(options) {
         cb();
     });
 
-    gulp.task('copy-typings-dts', ['nuke'], function() {
-        return gulp.src(paths.typings.glob)
-            .pipe(gulp.dest(paths.temp.root));
-    });
-
-    /** Copies .d.ts files from OneJS to temp path to compile against */
-    gulp.task('copy-onejs-dts', ['nuke'], function() {
-        return gulp.src(paths.onejsFiles.dts)
-            .pipe(gulp.dest(paths.temp.root + 'onejs/'));
-    });
-
-    /** Copies static OneJS js files to app path */
-    gulp.task('copy-onejs-js', ['nuke'], function() {
-        return gulp.src(paths.onejsFiles.js)
-            .pipe(gulp.dest(paths.app.root + 'onejs/'));
-    });
-
     /** Runs LESS compiler, auto-prefixer, and uglify, then creates js modules and outputs to temp folder */
-    gulp.task('build-less', ['nuke'], function() {
+    gulp.task('build-less', _.union(['nuke'], gulpTaskOptions['build-less']), function() {
         return gulp.src(paths.src.lessGlob)
             .pipe(less())
             .pipe(postcss([autoprefixer(autoprefixerOptions)]))
@@ -82,7 +65,7 @@ module.exports = function(options) {
     });
 
     /** Compiles OneJS html templates */
-    gulp.task('build-templates', ['nuke'], function() {
+    gulp.task('build-templates', _.union(['nuke'], gulpTaskOptions['build-templates']), function() {
         return gulp.src(paths.src.htmlGlob)
             .pipe(htmlMinify({
                 comments: true
@@ -92,7 +75,7 @@ module.exports = function(options) {
     });
 
     /** Copies OneJS TypeScript files to temp directory for futher compilation */
-    gulp.task('copy-typescript', ['nuke'], function() {
+    gulp.task('copy-typescript', _.union(['nuke'], gulpTaskOptions['copy-typescript']), function() {
         gutil.log(gutil.colors.gray('Running tslint (using tslint.json) refer to https://github.com/palantir/tslint for more details on each rule.'));
         return gulp.src(paths.src.tsGlob)
             .pipe(gulp.dest(paths.temp.root))
@@ -101,10 +84,10 @@ module.exports = function(options) {
     });
 
     /** Runs the basic pre-processing steps before compilation */
-    gulp.task('build-app-preprocess', _.union(['build-templates', 'copy-typescript', 'build-less', 'copy-onejs-dts', 'copy-typings-dts', 'copy-app-deps', 'copy-onejs-js'], gulpTaskOptions['build-app-preprocess']));
+    gulp.task('build-app-preprocess', _.union(['build-templates', 'copy-typescript', 'build-less', 'copy-app-deps'], gulpTaskOptions['build-app-preprocess']));
 
     /** Runs the TypeScript amd compiler over your application .ts files */
-    gulp.task('build-app-amd', ['build-app-preprocess'], function() {
+    gulp.task('build-app-amd', _.union(['build-app-preprocess'], gulpTaskOptions['build-app-amd']), function() {
         return gulp.src(paths.temp.tsGlob)
             // Allow tscOption overrides, but ensure that we're targeting amd
             .pipe(tsc(_.merge(tscOptions, {module: 'amd'})))
@@ -112,7 +95,7 @@ module.exports = function(options) {
     });
 
     /** Runs the TypeScript commonjs compiler over your application .ts files */
-    gulp.task('build-app-commonjs', ['build-app-preprocess'], function() {
+    gulp.task('build-app-commonjs', _.union(['build-app-preprocess'], gulpTaskOptions['build-app-commonjs']), function() {
         return gulp.src(paths.temp.tsGlob)
             // Allow tscOption overrides, but ensure that we're targeting commonjs
             .pipe(tsc(_.merge(tscOptions, {module: 'commonjs'})))
@@ -125,8 +108,8 @@ module.exports = function(options) {
     });
 
     /** Default dev task for building */
-    gulp.task('build-app', ['build-app-amd']);
+    gulp.task('build-app', _.union(['build-app-amd'], gulpTaskOptions['build-app']));
 
-    /** Our default task, but can be overridden by the users gulp file */
-    gulp.task('default', ['build-app']);
+    /** Our default task */
+    gulp.task('default', _.union(['build-app'], gulpTaskOptions['default']));
 };

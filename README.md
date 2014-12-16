@@ -29,9 +29,11 @@ As show in the example above, there are options that you can pass while register
 | rootDir | false | The rootdir for your project, generally this is `__dirname` |
 | paths | true | If you want to override our path structure, you can do so. This is not recommended as OneJS has an existing, expected directory structure |
 | karma | false (for test) | Pass in your local karma instance so tests can be ran properly |
-| autoprefixerOptions | true | We use [gulp-autoprefixer](https://github.com/sindresorhus/gulp-autoprefixer) to help simplify our LESS/CSS, feel free to pass in your options to autoprefixer as defined by the module itself |
+| autoprefixerOptions | true | Options for [gulp-autoprefixer](https://github.com/sindresorhus/gulp-autoprefixer) to help simplify LESS/CSS build steps |
 | tscOptions | true | Options for [gulp-typescript](https://github.com/ivogabe/gulp-typescript) |
-| deps | true | A map of src globs to dest paths for the build process to copy over before build time |
+| deps | true | A map of src globs to destination paths for the build process to copy over before build time |
+| tsLintOptions | true | Options for [gulp-tslint](https://www.npmjs.com/package/gulp-tslint) |
+| gulpTaskOptions | true | A key -> value pair where the key is the gulp task name and the value is the additional gulp tasks to add as dependencies for that task |
 
 ## 4 flavors of gulp tasks
 You can register all, or just a subset of the available gulp tasks.

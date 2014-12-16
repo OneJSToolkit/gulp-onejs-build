@@ -7,6 +7,7 @@ var releaseTasks = require('./tasks/release.js');
 var testTasks = require('./tasks/test.js');
 var _ = require('lodash');
 var fs = require('fs');
+var gutil = require('gulp-util');
 
 module.exports = {
     gulpTasks: {
@@ -24,7 +25,12 @@ module.exports = {
                     root: 'app-min/'
                 }
             },
-            deps: {},
+            deps: {
+                // Our default dependencies are OneJS and anything in the typings dir
+                'bower_components/onejs/dist/amd/*.d.ts': 'temp/onejs/',
+                'bower_components/onejs/dist/amd/*.js': 'app/onejs/',
+                'typings/**/*.d.ts': 'temp/',
+            },
             dist: {
                 // Distributable structure
                 root: 'dist/',
@@ -49,11 +55,6 @@ module.exports = {
                 ],
                 npmPackage: 'package.json',
                 bowerPackage: 'bower.json'
-            },
-            onejsFiles: {
-                // OneJS files that will need to be copied during build process
-                dts: 'bower_components/onejs/dist/amd/*.ts',
-                js: 'bower_components/onejs/dist/amd/*.js'
             },
             release: {
                 // These are temp directories that are only used when
@@ -105,7 +106,7 @@ module.exports = {
         },
         test: function(options) {
             // Registers the gulp tasks found in tasks/test.js and dev.js
-            var mixedOptions = this.mixOptions(options);
+            var mixedOptions = this.mixOptions(options, true);
             devTasks(mixedOptions);
             testTasks(mixedOptions);
         },
@@ -115,9 +116,15 @@ module.exports = {
             this.release(options);
             this.test(options);
         },
-        mixOptions: function(options) {
+        mixOptions: function(options, isTest) {
             if (!options.gulp || !options.rootDir) {
-                console.log('Please provide your gulp and rootDir in the options!');
+                gutil.log(gutil.colors.red('Please provide your gulp and rootDir in the options!'));
+                process.exit(1);
+            }
+
+            if (isTest && !options.karma) {
+                gutil.log(gutil.colors.red('Please provide your karma instance in the options!'));
+                process.exit(1);
             }
 
             // Mix in path options

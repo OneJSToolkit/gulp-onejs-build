@@ -18,12 +18,13 @@ module.exports = function(options) {
     var paths = options.paths;
     var rootDir = options.rootDir;
     var tscOptions = options.tscOptions;
+    var gulpTaskOptions = options.gulpTaskOptions;
 
     var bumpType;
     var newVersion;
 
     /** Creates a minified version of your application */
-    gulp.task('build-app-minify', ['build-app-amd'], function() {
+    gulp.task('build-app-minify', _.union(['build-app-amd'], gulpTaskOptions['build-app-minify']), function() {
         return gulp.src([paths.app.jsGlob])
             .pipe(uglify())
             .pipe(size({
@@ -34,14 +35,14 @@ module.exports = function(options) {
     });
 
     /** Copies the minified static files to your application path */
-    gulp.task('copy-minified-static-files', ['nuke'], function() {
+    gulp.task('copy-minified-static-files', _.union(['nuke'], ['copy-minified-static-files']), function() {
         return gulp.src(paths.staticFiles.js)
             .pipe(uglify())
             .pipe(gulp.dest(paths.app.min.root));
     });
 
     /** Creates the amd distributable directory */
-    gulp.task('build-dist-amd', ['build-app-preprocess'], function() {
+    gulp.task('build-dist-amd', _.union(['build-app-preprocess'], gulpTaskOptions['build-dist-amd']), function() {
         var tsResult = gulp.src(paths.temp.srcGlob)
             // Allow tscOption overrides, but ensure that we're targeting amd
             .pipe(tsc(_.merge(tscOptions, {module: 'amd', declarationFiles: true})));
@@ -51,7 +52,7 @@ module.exports = function(options) {
     });
 
     /** Creates the commonjs distributable directory */
-    gulp.task('build-dist-commonjs', ['build-app-preprocess'], function() {
+    gulp.task('build-dist-commonjs', _.union(['build-app-preprocess'], gulpTaskOptions['build-dist-commonjs']), function() {
         var tsResult = gulp.src(paths.temp.srcGlob)
             // Allow tscOption overrides, but ensure that we're targeting commonjs
             .pipe(tsc(_.merge(tscOptions, {module: 'commonjs', declarationFiles: true})));
@@ -60,20 +61,20 @@ module.exports = function(options) {
         return tsResult.js.pipe(gulp.dest(paths.dist.commonjs));
     });
 
-    gulp.task('copy-dist-css', ['build-app-preprocess'], function() {
+    gulp.task('copy-dist-css', _.union(['build-app-preprocess'], gulpTaskOptions['build-app-preprocess']), function() {
         return gulp.src(paths.app.cssGlob)
             .pipe(gulp.dest(paths.dist.amd))
             .pipe(gulp.dest(paths.dist.commonjs));
     });
 
-    gulp.task('copy-dist-templates', ['build-app-preprocess'], function() {
+    gulp.task('copy-dist-templates', _.union(['build-app-preprocess'], gulpTaskOptions['copy-dist-templates']), function() {
         return gulp.src(paths.app.htmlGlob)
             .pipe(gulp.dest(paths.dist.amd))
             .pipe(gulp.dest(paths.dist.commonjs));
     })
 
     /** Creates both dist flavors */
-    gulp.task('build-dist', ['build-dist-commonjs', 'build-dist-amd', 'copy-dist-css', 'copy-dist-templates']);
+    gulp.task('build-dist', _.union(['build-dist-commonjs', 'build-dist-amd', 'copy-dist-css', 'copy-dist-templates'], gulpTaskOptions['build-dist']));
 
     /**
      * This next section of tasks are intentionally a bunch of small tasks
@@ -85,18 +86,18 @@ module.exports = function(options) {
 
     /** Temporarily copies the built folder to a temp dir so it will persist
         when switching git branches that have different gitignores */
-    gulp.task('pre-release', ['build-dist'], function() {
+    gulp.task('pre-release', _.union(['build-dist'], gulpTaskOptions['pre-release']), function() {
         return gulp.src(paths.dist.glob)
             .pipe(gulp.dest(paths.release.dist));
     });
 
-    gulp.task('pre-release-meta', ['build-dist'], function() {
+    gulp.task('pre-release-meta', _.union(['build-dist'], gulpTaskOptions['pre-release-meta']), function() {
         return gulp.src(paths.dist.metaGlob)
             .pipe(gulp.dest(paths.release.root));
     });
 
     /** Prompts the user for info about the version */
-    gulp.task('prompt-release', ['pre-release', 'pre-release-meta'], function() {
+    gulp.task('prompt-release', _.union(['pre-release', 'pre-release-meta'], gulpTaskOptions['prompt-release']), function() {
         var questions = [
             {
                 type: 'list',
@@ -151,13 +152,13 @@ module.exports = function(options) {
     }
 
     /** Commits the npm and bower packages on master */
-    gulp.task('commit-master', ['prompt-release'], function() {
+    gulp.task('commit-master', _.union(['prompt-release'], gulpTaskOptions['commit-master']), function() {
         return gulp.src([rootDir + '/' + paths.staticFiles.npmPackage, rootDir + '/' + paths.staticFiles.bowerPackage])
             .pipe(git.commit(generateBumpMessage()));
     });
 
     /** Checks out the git dist branch */
-    gulp.task('checkout-dist', ['commit-master'], function(cb) {
+    gulp.task('checkout-dist', _.union(['commit-master'], gulpTaskOptions['checkout-dist']), function(cb) {
         git.checkout('dist', function(err) {
             if (err) { return cb(err); }
             cb();
@@ -165,35 +166,35 @@ module.exports = function(options) {
     });
 
     /** Copies the dist files to their rightful location */
-    gulp.task('copy-dist-bits', ['checkout-dist'], function() {
+    gulp.task('copy-dist-bits', _.union(['checkout-dist'], gulpTaskOptions['copy-dist-bits']), function() {
         return gulp.src(paths.release.distGlob)
             .pipe(gulp.dest(paths.dist.root));
     });
 
     /** Copies the meta files (package/bower.json) to their rightful location */
-    gulp.task('copy-meta-dist-bits', ['checkout-dist'], function() {
+    gulp.task('copy-meta-dist-bits', _.union(['checkout-dist'], gulpTaskOptions['copy-meta-dist-bits']), function() {
         return gulp.src(paths.release.metaGlob)
             .pipe(gulp.dest(rootDir));
     })
 
     /** Removes the temporary dist files */
-    gulp.task('clean-temp-bits', ['copy-dist-bits', 'copy-meta-dist-bits'], function(cb) {
+    gulp.task('clean-temp-bits', _.union(['copy-dist-bits', 'copy-meta-dist-bits'], gulpTaskOptions['clean-temp-bits']), function(cb) {
         del([paths.release.root], cb);
     });
 
     /** Writes the bower and npm package files with new version number */
-    gulp.task('write-version-updates', ['clean-temp-bits'], function() {
+    gulp.task('write-version-updates', _.union(['clean-temp-bits'], gulpTaskOptions['write-version-updates']), function() {
         return writeUpdatedVersionNumbers();
     });
 
     /** Commits the bower/npm package files and the dist folder */
-    gulp.task('commit-dist', ['write-version-updates'], function() {
+    gulp.task('commit-dist', _.union(['write-version-updates'], gulpTaskOptions['commit-dist']), function() {
         return gulp.src([paths.staticFiles.npmPackage, paths.staticFiles.bowerPackage, paths.dist.gitGlob])
             .pipe(git.commit(generateBumpMessage()));
     });
 
     /** Creates a git tag with the new version number */
-    gulp.task('write-dist-tag', ['commit-dist'], function(cb) {
+    gulp.task('write-dist-tag', _.union(['commit-dist'], gulpTaskOptions['write-dist-tag']), function(cb) {
         return git.tag('v' + newVersion, generateBumpMessage(), function(err) {
             if (err) { return cb(err); }
             cb();
@@ -201,7 +202,7 @@ module.exports = function(options) {
     });
 
     /** Checks out back to master branch */
-    gulp.task('checkout-master', ['write-dist-tag'], function(cb) {
+    gulp.task('checkout-master', _.union(['write-dist-tag'], gulpTaskOptions['checkout-master']), function(cb) {
         return git.checkout('master', function(err) {
             if (err) { return cb(err); }
             cb();
@@ -209,11 +210,11 @@ module.exports = function(options) {
     });
 
     /** The main task for bumping versions and publishing to dist branch */
-    gulp.task('release', ['checkout-master'], function() {
+    gulp.task('release', _.union(['checkout-master'], gulpTaskOptions['release']), function() {
         gutil.log(gutil.colors.green('Version bumped!'));
         gutil.log(gutil.colors.green('Please run `git push --follow-tags` and `git push --tags` and `npm/bower publish` to make updates available.'));
     });
 
     /** Builds the minified version of your app */
-    gulp.task('build-minify', ['build-app-minify', 'copy-minified-static-files']);
+    gulp.task('build-minify', _.union(['build-app-minify', 'copy-minified-static-files'], gulpTaskOptions['build-minify']));
 };
