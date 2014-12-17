@@ -116,7 +116,7 @@ module.exports = function(options) {
         return gulp.src(paths.temp.tsGlob)
             // Allow tscOption overrides, but ensure that we're targeting commonjs
             .pipe(tsc(_.merge(tscOptions, {module: 'commonjs'})))
-            .pipe(gulp.dest(paths.app.root));
+            .pipe(gulp.dest(paths.app.localRoot || paths.app.root));
     });
 
     /** Watches your src folder for changes, and runs the default build task */
