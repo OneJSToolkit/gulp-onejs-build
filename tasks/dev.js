@@ -78,7 +78,7 @@ module.exports = function(options) {
             .pipe(texttojs({
                 template: "define(['onejs/DomUtils'], function(DomUtils) { DomUtils.loadStyles(<%= content %>); });"
             }))
-            .pipe(gulp.dest(paths.app.root))
+            .pipe(gulp.dest(paths.app.localRoot || paths.app.root))
     });
 
     /** Compiles OneJS html templates */
@@ -88,14 +88,14 @@ module.exports = function(options) {
                 comments: true
             }))
             .pipe(texttojs())
-            .pipe(gulp.dest(paths.app.root));
+            .pipe(gulp.dest(paths.app.localRoot || paths.app.root));
     });
 
     /** Copies OneJS TypeScript files to temp directory for futher compilation */
     gulp.task('copy-typescript', ['nuke'], function() {
         gutil.log(gutil.colors.gray('Running tslint (using tslint.json) refer to https://github.com/palantir/tslint for more details on each rule.'));
         return gulp.src(paths.src.tsGlob)
-            .pipe(gulp.dest(paths.temp.root))
+            .pipe(gulp.dest(paths.app.localRoot || paths.temp.root))
             .pipe(tslint(tsLintOptions))
             .pipe(tslint.report('verbose'));
     });
@@ -108,7 +108,7 @@ module.exports = function(options) {
         return gulp.src(paths.temp.tsGlob)
             // Allow tscOption overrides, but ensure that we're targeting amd
             .pipe(tsc(_.merge(tscOptions, {module: 'amd'})))
-            .pipe(gulp.dest(paths.app.root));
+            .pipe(gulp.dest(paths.app.localRoot || paths.app.root));
     });
 
     /** Runs the TypeScript commonjs compiler over your application .ts files */
