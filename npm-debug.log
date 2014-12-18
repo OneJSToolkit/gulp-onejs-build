@@ -1,0 +1,130 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'publish' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.32
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 verbose publish [ '.' ]
+6 verbose cache add [ '.', null ]
+7 verbose cache add name=undefined spec="." args=[".",null]
+8 verbose parsed url { protocol: null,
+8 verbose parsed url   slashes: null,
+8 verbose parsed url   auth: null,
+8 verbose parsed url   host: null,
+8 verbose parsed url   port: null,
+8 verbose parsed url   hostname: null,
+8 verbose parsed url   hash: null,
+8 verbose parsed url   search: null,
+8 verbose parsed url   query: null,
+8 verbose parsed url   pathname: '.',
+8 verbose parsed url   path: '.',
+8 verbose parsed url   href: '.' }
+9 silly lockFile 3a52ce78- .
+10 verbose lock . C:\Users\bobnisco\AppData\Roaming\npm-cache\3a52ce78-.lock
+11 verbose tar pack [ 'C:\\Users\\bobnisco\\AppData\\Roaming\\npm-cache\\gulp-onejs-build\\1.4.0\\package.tgz',
+11 verbose tar pack   '.' ]
+12 verbose tarball C:\Users\bobnisco\AppData\Roaming\npm-cache\gulp-onejs-build\1.4.0\package.tgz
+13 verbose folder .
+14 info prepublish gulp-onejs-build@1.4.0
+15 silly lockFile 1f1177db-tar tar://.
+16 verbose lock tar://. C:\Users\bobnisco\AppData\Roaming\npm-cache\1f1177db-tar.lock
+17 silly lockFile 5d130178-lp-onejs-build-1-4-0-package-tgz tar://C:\Users\bobnisco\AppData\Roaming\npm-cache\gulp-onejs-build\1.4.0\package.tgz
+18 verbose lock tar://C:\Users\bobnisco\AppData\Roaming\npm-cache\gulp-onejs-build\1.4.0\package.tgz C:\Users\bobnisco\AppData\Roaming\npm-cache\5d130178-lp-onejs-build-1-4-0-package-tgz.lock
+19 silly lockFile 1f1177db-tar tar://.
+20 silly lockFile 1f1177db-tar tar://.
+21 silly lockFile 5d130178-lp-onejs-build-1-4-0-package-tgz tar://C:\Users\bobnisco\AppData\Roaming\npm-cache\gulp-onejs-build\1.4.0\package.tgz
+22 silly lockFile 5d130178-lp-onejs-build-1-4-0-package-tgz tar://C:\Users\bobnisco\AppData\Roaming\npm-cache\gulp-onejs-build\1.4.0\package.tgz
+23 silly lockFile f78b00eb-e-gulp-onejs-build-1-4-0-package C:\Users\bobnisco\AppData\Roaming\npm-cache\gulp-onejs-build\1.4.0\package
+24 verbose lock C:\Users\bobnisco\AppData\Roaming\npm-cache\gulp-onejs-build\1.4.0\package C:\Users\bobnisco\AppData\Roaming\npm-cache\f78b00eb-e-gulp-onejs-build-1-4-0-package.lock
+25 silly lockFile f78b00eb-e-gulp-onejs-build-1-4-0-package C:\Users\bobnisco\AppData\Roaming\npm-cache\gulp-onejs-build\1.4.0\package
+26 silly lockFile f78b00eb-e-gulp-onejs-build-1-4-0-package C:\Users\bobnisco\AppData\Roaming\npm-cache\gulp-onejs-build\1.4.0\package
+27 silly lockFile 3a52ce78- .
+28 silly lockFile 3a52ce78- .
+29 silly publish { name: 'gulp-onejs-build',
+29 silly publish   version: '1.4.0',
+29 silly publish   description: 'Common gulp utilies to use in OneJS projects',
+29 silly publish   main: 'index.js',
+29 silly publish   scripts: { test: 'echo "Error: no test specified" && exit 1' },
+29 silly publish   repository:
+29 silly publish    { type: 'git',
+29 silly publish      url: 'https://github.com/OneJSToolkit/gulp-onejs-build' },
+29 silly publish   keywords: [ 'gulpplugin', 'onejs' ],
+29 silly publish   license: 'MIT',
+29 silly publish   bugs: { url: 'https://github.com/OneJSToolkit/gulp-onejs-build/issues' },
+29 silly publish   homepage: 'https://github.com/OneJSToolkit/gulp-onejs-build',
+29 silly publish   dependencies:
+29 silly publish    { 'autoprefixer-core': '^4.0.1',
+29 silly publish      del: '^0.1.3',
+29 silly publish      'gulp-git': '^0.5.5',
+29 silly publish      'gulp-less': '^1.3.6',
+29 silly publish      'gulp-minify-css': '^0.3.11',
+29 silly publish      'gulp-minify-html': '^0.1.7',
+29 silly publish      'gulp-onejs-compiler': '^1.1.67',
+29 silly publish      'gulp-postcss': '^3.0.0',
+29 silly publish      'gulp-prompt': '^0.1.1',
+29 silly publish      'gulp-rename': '^1.2.0',
+29 silly publish      'gulp-size': '^1.1.0',
+29 silly publish      'gulp-texttojs': '^1.0.1',
+29 silly publish      'gulp-tslint': '^1.4.1',
+29 silly publish      'gulp-typescript': '^2.3.0',
+29 silly publish      'gulp-uglifyjs': '^0.5.0',
+29 silly publish      'gulp-util': '^3.0.1',
+29 silly publish      inquirer: '^0.8.0',
+29 silly publish      lodash: '^2.4.1',
+29 silly publish      'onejs-compiler': '^1.1.60',
+29 silly publish      semver: '^4.1.0',
+29 silly publish      tslint: '^1.0.1' },
+29 silly publish   devDependencies: { gulp: '^3.8.10' },
+29 silly publish   readme: '# [gulp](https://github.com/gulpjs/gulp)-onejs-build\r\nA set of handy gulp tasks to build, test, and release your OneJS project.\r\n\r\n## How to use\r\nInstall the plugin through npm\r\n`npm install gulp-onejs-build --save-dev`\r\n\r\nAdd it to your gulpfile.js and register all of the gulp tasks\r\n```javascript\r\nvar gulp = require(\'gulp\');\r\nvar karma = require(\'karma\').server;\r\nvar oneJsBuild = require(\'gulp-onejs-build\');\r\n\r\noneJsBuild.gulpTasks.all({\r\n    gulp: gulp,\r\n    rootDir: __dirname,\r\n    karma: karma\r\n});\r\n```\r\n\r\nRun `gulp` at the command line and that\'s it! For a full listing of all tasks that are registered, run the standard `gulp --tasks`!\r\n\r\n## Options\r\nAs show in the example above, there are options that you can pass while registering your gulp tasks.\r\n\r\n| name | optional | description |\r\n|------|----------|-------------|\r\n| gulp | false | Pass in your local gulp instance so the tasks are registered on the proper instance |\r\n| rootDir | false | The rootdir for your project, generally this is `__dirname` |\r\n| paths | true | If you want to override our path structure, you can do so. This is not recommended as OneJS has an existing, expected directory structure |\r\n| karma | false (for test) | Pass in your local karma instance so tests can be ran properly |\r\n| autoprefixerOptions | true | We use [gulp-autoprefixer](https://github.com/sindresorhus/gulp-autoprefixer) to help simplify our LESS/CSS, feel free to pass in your options to autoprefixer as defined by the module itself |\r\n| tscOptions | true | Options for [gulp-typescript](https://github.com/ivogabe/gulp-typescript) |\r\n| deps | true | A map of src globs to dest paths for the build process to copy over before build time |\r\n\r\n## 4 flavors of gulp tasks\r\nYou can register all, or just a subset of the available gulp tasks.\r\n\r\n### 1. All\r\nImports all the tasks available: dev, test, and release.\r\n\r\n### 2. Dev\r\nOnly imports the gulp tasks needed for development (everything that is in ./tasks/dev.js).\r\n\r\n### 3. Test\r\nImports the gulp tasks needed for testing (everything that is in ./tasks/test.js and ./tasks/dev.js).\r\n\r\n### 4. Release\r\nImports the gulp tasks needed for releasing/publishing to npm/bower (everything that is in ./tasks/release.js and ./tasks/dev.js).\r\n',
+29 silly publish   readmeFilename: 'README.md',
+29 silly publish   gitHead: '7c85bf1a7f6b77d8b6ca98b687ce7cf865111e4c',
+29 silly publish   _id: 'gulp-onejs-build@1.4.0',
+29 silly publish   _shasum: '11a919dc72b233a02680c63d9b75706dd7351d5d',
+29 silly publish   _from: '.' }
+30 verbose request where is /gulp-onejs-build
+31 verbose request registry https://registry.npmjs.org/
+32 verbose request id dd92e8ac9d7b9c2c
+33 verbose url raw /gulp-onejs-build
+34 verbose url resolving [ 'https://registry.npmjs.org/', './gulp-onejs-build' ]
+35 verbose url resolved https://registry.npmjs.org/gulp-onejs-build
+36 verbose request where is https://registry.npmjs.org/gulp-onejs-build
+37 info trying registry request attempt 1 at 11:53:21
+38 http PUT https://registry.npmjs.org/gulp-onejs-build
+39 http 403 https://registry.npmjs.org/gulp-onejs-build
+40 verbose headers { date: 'Thu, 18 Dec 2014 19:53:22 GMT',
+40 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+40 verbose headers   'content-type': 'application/json',
+40 verbose headers   'cache-control': 'max-age=60',
+40 verbose headers   'content-length': '6254',
+40 verbose headers   'accept-ranges': 'bytes',
+40 verbose headers   via: '1.1 varnish',
+40 verbose headers   'x-served-by': 'cache-lax1433-LAX',
+40 verbose headers   'x-cache': 'MISS',
+40 verbose headers   'x-cache-hits': '0',
+40 verbose headers   'x-timer': 'S1418932402.239437,VS0,VE183',
+40 verbose headers   'keep-alive': 'timeout=10, max=50',
+40 verbose headers   connection: 'Keep-Alive' }
+41 error publish Failed PUT 403
+42 error Error: forbidden cannot modify pre-existing version: 1.4.0
+42 error old={"name":"gulp-onejs-build","version":"1.4.0","description":"Common gulp utilies to use in OneJS projects","main":"index.js","scripts":{"test":"echo \"Error: no test specified\" && exit 1"},"repository":{"type":"git","url":"https://github.com/OneJSToolkit/gulp-onejs-build"},"keywords":["gulpplugin","onejs"],"license":"MIT","bugs":{"url":"https://github.com/OneJSToolkit/gulp-onejs-build/issues"},"homepage":"https://github.com/OneJSToolkit/gulp-onejs-build","dependencies":{"autoprefixer-core":"^4.0.1","del":"^0.1.3","gulp-git":"^0.5.5","gulp-less":"^1.3.6","gulp-minify-css":"^0.3.11","gulp-minify-html":"^0.1.7","gulp-onejs-compiler":"^1.1.67","gulp-postcss":"^3.0.0","gulp-prompt":"^0.1.1","gulp-rename":"^1.2.0","gulp-size":"^1.1.0","gulp-texttojs":"^1.0.1","gulp-tslint":"^1.4.1","gulp-typescript":"^2.3.0","gulp-uglifyjs":"^0.5.0","gulp-util":"^3.0.1","inquirer":"^0.8.0","lodash":"^2.4.1","onejs-compiler":"^1.1.60","semver":"^4.1.0","tslint":"^1.0.1"},"devDependencies":{"gulp":"^3.8.10"},"gitHead":"7c85bf1a7f6b77d8b6ca98b687ce7cf865111e4c","_id":"gulp-onejs-build@1.4.0","_shasum":"11a919dc72b233a02680c63d9b75706dd7351d5d","_from":".","_npmVersion":"1.4.28","_npmUser":{"name":"bobnisco","email":"bobnisco@gmail.com"},"maintainers":[{"name":"bobnisco","email":"bobnisco@gmail.com"}],"dist":{"shasum":"11a919dc72b233a02680c63d9b75706dd7351d5d","tarball":"http://registry.npmjs.org/gulp-onejs-build/-/gulp-onejs-build-1.4.0.tgz"}}
+42 error new={"name":"gulp-onejs-build","version":"1.4.0","description":"Common gulp utilies to use in OneJS projects","main":"index.js","scripts":{"test":"echo \"Error: no test specified\" && exit 1"},"repository":{"type":"git","url":"https://github.com/OneJSToolkit/gulp-onejs-build"},"keywords":["gulpplugin","onejs"],"license":"MIT","bugs":{"url":"https://github.com/OneJSToolkit/gulp-onejs-build/issues"},"homepage":"https://github.com/OneJSToolkit/gulp-onejs-build","dependencies":{"autoprefixer-core":"^4.0.1","del":"^0.1.3","gulp-git":"^0.5.5","gulp-less":"^1.3.6","gulp-minify-css":"^0.3.11","gulp-minify-html":"^0.1.7","gulp-onejs-compiler":"^1.1.67","gulp-postcss":"^3.0.0","gulp-prompt":"^0.1.1","gulp-rename":"^1.2.0","gulp-size":"^1.1.0","gulp-texttojs":"^1.0.1","gulp-tslint":"^1.4.1","gulp-typescript":"^2.3.0","gulp-uglifyjs":"^0.5.0","gulp-util":"^3.0.1","inquirer":"^0.8.0","lodash":"^2.4.1","onejs-compiler":"^1.1.60","semver":"^4.1.0","tslint":"^1.0.1"},"devDependencies":{"gulp":"^3.8.10"},"readme":"# [gulp](https://github.com/gulpjs/gulp)-onejs-build\u000d\u000aA set of handy gulp tasks to build, test, and release your OneJS project.\u000d\u000a\u000d\u000a## How to use\u000d\u000aInstall the plugin through npm\u000d\u000a`npm install gulp-onejs-build --save-dev`\u000d\u000a\u000d\u000aAdd it to your gulpfile.js and register all of the gulp tasks\u000d\u000a```javascript\u000d\u000avar gulp = require('gulp');\u000d\u000avar karma = require('karma').server;\u000d\u000avar oneJsBuild = require('gulp-onejs-build');\u000d\u000a\u000d\u000aoneJsBuild.gulpTasks.all({\u000d\u000a    gulp: gulp,\u000d\u000a    rootDir: __dirname,\u000d\u000a    karma: karma\u000d\u000a});\u000d\u000a```\u000d\u000a\u000d\u000aRun `gulp` at the command line and that's it! For a full listing of all tasks that are registered, run the standard `gulp --tasks`!\u000d\u000a\u000d\u000a## Options\u000d\u000aAs show in the example above, there are options that you can pass while registering your gulp tasks.\u000d\u000a\u000d\u000a| name | optional | description |\u000d\u000a|------|----------|-------------|\u000d\u000a| gulp | false | Pass in your local gulp instance so the tasks are registered on the proper instance |\u000d\u000a| rootDir | false | The rootdir for your project, generally this is `__dirname` |\u000d\u000a| paths | true | If you want to override our path structure, you can do so. This is not recommended as OneJS has an existing, expected directory structure |\u000d\u000a| karma | false (for test) | Pass in your local karma instance so tests can be ran properly |\u000d\u000a| autoprefixerOptions | true | We use [gulp-autoprefixer](https://github.com/sindresorhus/gulp-autoprefixer) to help simplify our LESS/CSS, feel free to pass in your options to autoprefixer as defined by the module itself |\u000d\u000a| tscOptions | true | Options for [gulp-typescript](https://github.com/ivogabe/gulp-typescript) |\u000d\u000a| deps | true | A map of src globs to dest paths for the build process to copy over before build time |\u000d\u000a\u000d\u000a## 4 flavors of gulp tasks\u000d\u000aYou can register all, or just a subset of the available gulp tasks.\u000d\u000a\u000d\u000a### 1. All\u000d\u000aImports all the tasks available: dev, test, and release.\u000d\u000a\u000d\u000a### 2. Dev\u000d\u000aOnly imports the gulp tasks needed for development (everything that is in ./tasks/dev.js).\u000d\u000a\u000d\u000a### 3. Test\u000d\u000aImports the gulp tasks needed for testing (everything that is in ./tasks/test.js and ./tasks/dev.js).\u000d\u000a\u000d\u000a### 4. Release\u000d\u000aImports the gulp tasks needed for releasing/publishing to npm/bower (everything that is in ./tasks/release.js and ./tasks/dev.js).\u000d\u000a","readmeFilename":"README.md","gitHead":"7c85bf1a7f6b77d8b6ca98b687ce7cf865111e4c","_id":"gulp-onejs-build@1.4.0","_shasum":"11a919dc72b233a02680c63d9b75706dd7351d5d","_from":".","_npmVersion":"1.4.28","_npmUser":{"name":"bobnisco","email":"bobnisco@gmail.com"},"maintainers":[{"name":"bobnisco","email":"bobnisco@gmail.com"}],"dist":{"shasum":"11a919dc72b233a02680c63d9b75706dd7351d5d","tarball":"http://registry.npmjs.org/gulp-onejs-build/-/gulp-onejs-build-1.4.0.tgz"}}: gulp-onejs-build
+42 error     at RegClient.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:308:14)
+42 error     at Request._callback (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:246:65)
+42 error     at Request.self.callback (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:236:22)
+42 error     at Request.emit (events.js:98:17)
+42 error     at Request.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:1142:14)
+42 error     at Request.emit (events.js:117:20)
+42 error     at IncomingMessage.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:1096:12)
+42 error     at IncomingMessage.emit (events.js:117:20)
+42 error     at _stream_readable.js:943:16
+42 error     at process._tickCallback (node.js:419:13)
+43 error If you need help, you may report this *entire* log,
+43 error including the npm and node versions, at:
+43 error     <http://github.com/npm/npm/issues>
+44 error System Windows_NT 6.2.9200
+45 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "publish"
+46 error cwd C:\Users\bobnisco\Documents\GitHub\gulp-onejs-build
+47 error node -v v0.10.32
+48 error npm -v 1.4.28
+49 verbose exit [ 1, true ]

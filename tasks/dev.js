@@ -23,21 +23,24 @@ module.exports = function(options) {
     var gulpTaskOptions = options.gulpTaskOptions;
 
     /** Removes all built files, keeping only source */
-    gulp.task('nuke', function(cb) {
+    gulp.task('nuke', ['clean'], function(cb) {
+        del([
+            paths.dist.root,
+        ], cb);
+    });
+
+    /** Removes all built files EXCEPT dist directory for gulp watch purposes */
+    gulp.task('clean', function(cb) {
         del([
             paths.temp.root,
             paths.app.root,
             paths.app.min.root,
-            paths.dist.root,
             paths.release.root
         ], cb);
     });
 
-    /** Symlink for nuke */
-    gulp.task('clean', ['nuke']);
-
     /** Copies app deps to their app path */
-    gulp.task('copy-app-deps', ['nuke'], function(cb) {
+    gulp.task('copy-app-deps', ['clean'], function(cb) {
         _.map(paths.deps, function(value, key) {
             if (value instanceof Array) {
                 _.map(value, function(v, k) {
@@ -52,25 +55,25 @@ module.exports = function(options) {
         cb();
     });
 
-    gulp.task('copy-typings-dts', ['nuke'], function() {
+    gulp.task('copy-typings-dts', ['clean'], function() {
         return gulp.src(paths.typings.glob)
             .pipe(gulp.dest(paths.temp.root));
     });
 
     /** Copies .d.ts files from OneJS to temp path to compile against */
-    gulp.task('copy-onejs-dts', ['nuke'], function() {
+    gulp.task('copy-onejs-dts', ['clean'], function() {
         return gulp.src(paths.onejsFiles.dts)
             .pipe(gulp.dest(paths.temp.root + 'onejs/'));
     });
 
     /** Copies static OneJS js files to app path */
-    gulp.task('copy-onejs-js', ['nuke'], function() {
+    gulp.task('copy-onejs-js', ['clean'], function() {
         return gulp.src(paths.onejsFiles.js)
             .pipe(gulp.dest(paths.app.root + 'onejs/'));
     });
 
     /** Runs LESS compiler, auto-prefixer, and uglify, then creates js modules and outputs to temp folder */
-    gulp.task('build-less', ['nuke'], function() {
+    gulp.task('build-less', ['clean'], function() {
         return gulp.src(paths.src.lessGlob)
             .pipe(less())
             .pipe(postcss([autoprefixer(autoprefixerOptions)]))
@@ -82,7 +85,7 @@ module.exports = function(options) {
     });
 
     /** Compiles OneJS html templates */
-    gulp.task('build-templates', ['nuke'], function() {
+    gulp.task('build-templates', ['clean'], function() {
         return gulp.src(paths.src.htmlGlob)
             .pipe(htmlMinify({
                 comments: true
@@ -92,7 +95,7 @@ module.exports = function(options) {
     });
 
     /** Copies OneJS TypeScript files to temp directory for futher compilation */
-    gulp.task('copy-typescript', ['nuke'], function() {
+    gulp.task('copy-typescript', ['clean'], function() {
         gutil.log(gutil.colors.gray('Running tslint (using tslint.json) refer to https://github.com/palantir/tslint for more details on each rule.'));
         return gulp.src(paths.src.tsGlob)
             .pipe(gulp.dest(paths.app.localRoot || paths.temp.root))
