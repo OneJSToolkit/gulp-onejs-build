@@ -98,7 +98,7 @@ module.exports = function(options) {
     gulp.task('copy-typescript', ['clean'], function() {
         gutil.log(gutil.colors.gray('Running tslint (using tslint.json) refer to https://github.com/palantir/tslint for more details on each rule.'));
         return gulp.src(paths.src.tsGlob)
-            .pipe(gulp.dest(paths.app.localRoot || paths.temp.root))
+            .pipe(gulp.dest(paths.temp.localRoot || paths.temp.root))
             .pipe(tslint(tsLintOptions))
             .pipe(tslint.report('verbose'));
     });
