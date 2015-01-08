@@ -128,6 +128,7 @@ module.exports = {
                 rootDir: options.rootDir || __dirname,
                 paths: options.paths || this.paths,
                 karma: options.karma,
+                karmaOptions: options.karmaOptions || {},
                 autoprefixerOptions: options.autoprefixerOptions || {},
                 // Set our default to target ES5, but allow overrides from the user
                 tscOptions: _.merge({target: 'ES5'}, options.tscOptions),
