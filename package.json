@@ -1,6 +1,6 @@
 {
   "name": "gulp-onejs-build",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "description": "Common gulp utilies to use in OneJS projects",
   "main": "index.js",
   "scripts": {
