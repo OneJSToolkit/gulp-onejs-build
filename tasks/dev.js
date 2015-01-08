@@ -79,7 +79,14 @@ module.exports = function(options) {
             .pipe(postcss([autoprefixer(autoprefixerOptions)]))
             .pipe(cssMinify())
             .pipe(texttojs({
-                template: "define(['onejs/DomUtils'], function(DomUtils) { DomUtils.loadStyles(<%= content %>); });"
+                template: function (file) {
+                    var domUtilsPath = 'onejs/DomUtils';
+                    if (paths.app.localRoot) {
+                        var localPath = path.join(path.relative(paths.src.root, file.path));
+                        domUtilsPath = path.relative(localPath, path.join(domUtilsPath)).replace(/\\/g, '/');
+                    }
+                    return "define(['" + domUtilsPath + "'], function(DomUtils) { DomUtils.loadStyles(<%= content %>); });";
+                }
             }))
             .pipe(gulp.dest(paths.app.localRoot || paths.app.root))
     });
