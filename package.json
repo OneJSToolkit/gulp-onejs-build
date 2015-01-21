@@ -36,7 +36,7 @@
     "gulp-typescript": "^2.3.0",
     "gulp-uglifyjs": "^0.5.0",
     "gulp-util": "^3.0.1",
-    "inquirer": "^0.8.0",
+    "inquirer": "0.8.0",
     "lodash": "^2.4.1",
     "onejs-compiler": "^1.1.60",
     "semver": "^4.1.0",
