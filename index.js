@@ -24,7 +24,11 @@ module.exports = {
                     root: 'app-min/'
                 }
             },
-            deps: {},
+            deps: {
+                // OneJS files that will need to be copied during build process
+                oneJsDts: 'bower_components/onejs/dist/amd/*.d.ts',
+                oneJsJs: 'bower_components/onejs/dist/amd/*.js',
+            },
             dist: {
                 // Distributable structure
                 root: 'dist/',
@@ -49,11 +53,6 @@ module.exports = {
                 ],
                 npmPackage: 'package.json',
                 bowerPackage: 'bower.json'
-            },
-            onejsFiles: {
-                // OneJS files that will need to be copied during build process
-                dts: 'bower_components/onejs/dist/amd/*.ts',
-                js: 'bower_components/onejs/dist/amd/*.js'
             },
             release: {
                 // These are temp directories that are only used when

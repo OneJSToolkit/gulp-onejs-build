@@ -23,7 +23,7 @@ module.exports = function(options) {
     var newVersion;
 
     /** Creates a minified version of your application */
-    gulp.task('build-app-minify', ['build-app-amd'], function() {
+    gulp.task('build-app-minify', _.union(['build-app-amd'], gulpTaskOptions['build-app-minify']), function() {
         return gulp.src([paths.app.jsGlob])
             .pipe(uglify())
             .pipe(size({
@@ -34,14 +34,14 @@ module.exports = function(options) {
     });
 
     /** Copies the minified static files to your application path */
-    gulp.task('copy-minified-static-files', ['clean'], function() {
+    gulp.task('copy-minified-static-files', _.union(['clean'], gulpTaskOptions['copy-minified-static-files']), function() {
         return gulp.src(paths.staticFiles.js)
             .pipe(uglify())
             .pipe(gulp.dest(paths.app.min.root));
     });
 
     /** Creates the amd distributable directory */
-    gulp.task('build-dist-amd', ['build-app-preprocess'], function() {
+    gulp.task('build-dist-amd', _.union(['build-app-preprocess'], gulpTaskOptions['build-dist-amd']), function() {
         var tsResult = gulp.src(paths.temp.srcGlob)
             // Allow tscOption overrides, but ensure that we're targeting amd
             .pipe(tsc(_.merge(tscOptions, {module: 'amd', declarationFiles: true})));
@@ -51,7 +51,7 @@ module.exports = function(options) {
     });
 
     /** Creates the commonjs distributable directory */
-    gulp.task('build-dist-commonjs', ['build-app-preprocess'], function() {
+    gulp.task('build-dist-commonjs', _.union(['build-app-preprocess'], gulpTaskOptions['build-dist-commonjs']), function() {
         var tsResult = gulp.src(paths.temp.srcGlob)
             // Allow tscOption overrides, but ensure that we're targeting commonjs
             .pipe(tsc(_.merge(tscOptions, {module: 'commonjs', declarationFiles: true})));
@@ -60,20 +60,20 @@ module.exports = function(options) {
         return tsResult.js.pipe(gulp.dest(paths.dist.commonjs));
     });
 
-    gulp.task('copy-dist-css', ['build-app-preprocess'], function() {
+    gulp.task('copy-dist-css', _.union(['build-app-preprocess'], gulpTaskOptions['copy-dist-css']), function() {
         return gulp.src(paths.app.cssGlob)
             .pipe(gulp.dest(paths.dist.amd))
             .pipe(gulp.dest(paths.dist.commonjs));
     });
 
-    gulp.task('copy-dist-templates', ['build-app-preprocess'], function() {
+    gulp.task('copy-dist-templates', _.union(['build-app-preprocess'], gulpTaskOptions['copy-dist-templates']), function() {
         return gulp.src(paths.app.htmlGlob)
             .pipe(gulp.dest(paths.dist.amd))
             .pipe(gulp.dest(paths.dist.commonjs));
     })
 
     /** Creates both dist flavors */
-    gulp.task('build-dist', ['build-dist-commonjs', 'build-dist-amd', 'copy-dist-css', 'copy-dist-templates']);
+    gulp.task('build-dist', _.union(['build-dist-commonjs', 'build-dist-amd', 'copy-dist-css', 'copy-dist-templates'], gulpTaskOptions['build-dist']));
 
     /**
      * This next section of tasks are intentionally a bunch of small tasks
@@ -215,5 +215,5 @@ module.exports = function(options) {
     });
 
     /** Builds the minified version of your app */
-    gulp.task('build-minify', ['build-app-minify', 'copy-minified-static-files']);
+    gulp.task('build-minify', _.union(['build-app-minify', 'copy-minified-static-files'], gulpTaskOptions['build-minify']));
 };
