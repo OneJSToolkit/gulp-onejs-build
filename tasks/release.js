@@ -81,6 +81,9 @@ module.exports = function(options) {
      * Taks dealing with git, or writing back the package/bower.json files
      * need to be synchronous, ergo the callback usage or sync versions
      * of the node fs methods.
+     *
+     * Do not allow gulpTaskOptions within the release section or else it will
+     * probably break some assumptions we make about release tasks.
      */
 
     /** Temporarily copies the built folder to a temp dir so it will persist

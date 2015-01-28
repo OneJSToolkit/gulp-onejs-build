@@ -56,11 +56,6 @@ module.exports = function(options) {
         cb();
     });
 
-    gulp.task('copy-typings-dts', _.union(['clean'], gulpTaskOptions['copy-typings-dts']), function() {
-        return gulp.src(paths.typings.glob)
-            .pipe(gulp.dest(paths.temp.root));
-    });
-
     /** Runs LESS compiler, auto-prefixer, and uglify, then creates js modules and outputs to temp folder */
     gulp.task('build-less', _.union(['clean'], gulpTaskOptions['build-less']), function() {
         return gulp.src(paths.src.lessGlob)
@@ -100,7 +95,7 @@ module.exports = function(options) {
     });
 
     /** Runs the basic pre-processing steps before compilation */
-    gulp.task('build-app-preprocess', _.union(['build-templates', 'copy-typescript', 'build-less', 'copy-typings-dts', 'copy-app-deps'], gulpTaskOptions['build-app-preprocess']));
+    gulp.task('build-app-preprocess', _.union(['build-templates', 'copy-typescript', 'build-less', 'copy-app-deps'], gulpTaskOptions['build-app-preprocess']));
 
     /** Runs the TypeScript amd compiler over your application .ts files */
     gulp.task('build-app-amd', _.union(['build-app-preprocess'], gulpTaskOptions['build-app-amd']), function() {
