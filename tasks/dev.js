@@ -85,32 +85,52 @@ module.exports = function(options) {
             .pipe(gulp.dest(paths.app.localRoot || paths.app.root));
     });
 
-    /** Copies OneJS TypeScript files to temp directory for futher compilation */
-    gulp.task('copy-typescript', _.union(['clean'], gulpTaskOptions['copy-typescript']), function() {
-        gutil.log(gutil.colors.gray('Running tslint (using tslint.json) refer to https://github.com/palantir/tslint for more details on each rule.'));
-        return gulp.src(paths.src.tsGlob)
-            .pipe(gulp.dest(paths.temp.localRoot || paths.temp.root))
-            .pipe(tslint(tsLintOptions))
-            .pipe(tslint.report('verbose'));
-    });
+    /** Copies TypeScript files to temp directory for futher compilation */
+        gulp.task('copy-typescript', _.union(['clean'], gulpTaskOptions['copy-typescript']), function () {
+            return gulp.src(paths.src.tsGlob)
+                .pipe(gulp.dest(paths.temp.localRoot || paths.temp.root));
+        });
+
+        /** Lints the source TypeScript files */
+        gulp.task('lint-typescript', _.union(gulpTaskOptions['lint-typescript']), function () {
+            gutil.log(gutil.colors.gray('Running tslint (using tslint.json) refer to https://github.com/palantir/tslint for more details on each rule.'));
+            return gulp.src(paths.src.tsLintGlob)
+                .pipe(tslint(tsLintOptions))
+                .pipe(tslint.report('verbose'));
+        });
+
 
     /** Runs the basic pre-processing steps before compilation */
-    gulp.task('build-app-preprocess', _.union(['build-templates', 'copy-typescript', 'build-less', 'copy-app-deps'], gulpTaskOptions['build-app-preprocess']));
+    gulp.task('build-app-preprocess', _.union(['build-templates', 'copy-typescript', 'build-less', 'copy-app-deps', 'lint-typescript'], gulpTaskOptions['build-app-preprocess']));
 
     /** Runs the TypeScript amd compiler over your application .ts files */
     gulp.task('build-app-amd', _.union(['build-app-preprocess'], gulpTaskOptions['build-app-amd']), function() {
-        return gulp.src(paths.temp.tsGlob)
+        return gulp.src(paths.temp.tsGlob, { base: paths.temp.root })
+            .pipe(through.obj(function (file, encoding, callback) {
+                // Mark the file as excluded for piping later
+                if (!paths.temp.tsFilter || paths.temp.tsFilter(file)) {
+                    this.push(file);
+                }
+                callback();
+            }))
             // Allow tscOption overrides, but ensure that we're targeting amd
-            .pipe(tsc(_.merge(tscOptions, {module: 'amd'})))
-            .pipe(gulp.dest(paths.app.localRoot || paths.app.root));
+            .pipe(tsc(_.merge(tscOptions, { module: 'amd' })))
+            .pipe(gulp.dest(paths.app.root));
     });
 
     /** Runs the TypeScript commonjs compiler over your application .ts files */
     gulp.task('build-app-commonjs', _.union(['build-app-preprocess'], gulpTaskOptions['build-app-amd']), function() {
-        return gulp.src(paths.temp.tsGlob)
+        return gulp.src(paths.temp.tsGlob, { base: paths.temp.root })
+            .pipe(through.obj(function (file, encoding, callback) {
+                // Mark the file as excluded for piping later
+                if (!paths.temp.tsFilter || paths.temp.tsFilter(file)) {
+                    this.push(file);
+                }
+                callback();
+            }))
             // Allow tscOption overrides, but ensure that we're targeting commonjs
-            .pipe(tsc(_.merge(tscOptions, {module: 'commonjs'})))
-            .pipe(gulp.dest(paths.app.localRoot || paths.app.root));
+            .pipe(tsc(_.merge(tscOptions, { module: 'commonjs' })))
+            .pipe(gulp.dest(paths.app.root));
     });
 
     /** Watches your src folder for changes, and runs the default build task */
