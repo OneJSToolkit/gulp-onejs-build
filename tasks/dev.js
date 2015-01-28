@@ -31,7 +31,7 @@ module.exports = function(options) {
     });
 
     /** Removes all built files EXCEPT dist directory for gulp watch purposes */
-    gulp.task('clean', _.union(['clean'], gulpTaskOptions['clean']), function(cb) {
+    gulp.task('clean', _.union(gulpTaskOptions['clean']), function(cb) {
         del([
             paths.temp.root,
             paths.app.root,

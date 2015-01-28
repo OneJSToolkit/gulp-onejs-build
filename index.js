@@ -26,9 +26,9 @@ module.exports = {
             },
             deps: {
                 // OneJS files that will need to be copied during build process
-                oneJsDts: 'bower_components/onejs/dist/amd/*.d.ts',
-                oneJsJs: 'bower_components/onejs/dist/amd/*.js',
-                typings: 'typings/**/*.d.ts',
+                'bower_components/onejs/dist/amd/*.d.ts': 'temp/',
+                'bower_components/onejs/dist/amd/*.js': 'app/onejs/',
+                'typings/**/*.d.ts': 'temp/',
             },
             dist: {
                 // Distributable structure

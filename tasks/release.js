@@ -18,6 +18,7 @@ module.exports = function(options) {
     var paths = options.paths;
     var rootDir = options.rootDir;
     var tscOptions = options.tscOptions;
+    var gulpTaskOptions = options.gulpTaskOptions;
 
     var bumpType;
     var newVersion;
@@ -167,8 +168,17 @@ module.exports = function(options) {
         });
     });
 
+    /** Sets the local dist to be exactly what the server dist branch is
+        in order to avoid conflicts, or people forgetting to pull first */
+    gulp.task('reset-dist', ['checkout-dist'], function(cb) {
+        git.reset('origin/HEAD', {args:'--hard'}, function (err) {
+            if (err) { return cb(err); }
+            cb();
+        });
+    });
+
     /** Copies the dist files to their rightful location */
-    gulp.task('copy-dist-bits', ['checkout-dist'], function() {
+    gulp.task('copy-dist-bits', ['reset-dist'], function() {
         return gulp.src(paths.release.distGlob)
             .pipe(gulp.dest(paths.dist.root));
     });
@@ -214,7 +224,7 @@ module.exports = function(options) {
     /** The main task for bumping versions and publishing to dist branch */
     gulp.task('release', ['checkout-master'], function() {
         gutil.log(gutil.colors.green('Version bumped!'));
-        gutil.log(gutil.colors.green('Please run `git push --follow-tags` and `git push --tags` and `npm/bower publish` to make updates available.'));
+        gutil.log(gutil.colors.green('Please run `git push` and `git push --tags` and `npm/bower publish` to make updates available.'));
     });
 
     /** Builds the minified version of your app */
