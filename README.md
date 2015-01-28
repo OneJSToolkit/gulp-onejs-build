@@ -1,4 +1,6 @@
 # [gulp](https://github.com/gulpjs/gulp)-onejs-build
+[![Dependency Status](https://david-dm.org/OneJSToolkit/gulp-onejs-build.svg)](https://david-dm.org/OneJSToolkit/gulp-onejs-build)
+
 A set of handy gulp tasks to build, test, and release your OneJS project.
 
 ## How to use
