@@ -16,6 +16,7 @@ module.exports = function(options) {
     var gutil = require('gulp-util');
     var path = require('path');
     var through = require('through2');
+    var Q = require('q');
 
     var gulp = options.gulp;
     var paths = options.paths;
@@ -43,18 +44,27 @@ module.exports = function(options) {
 
     /** Copies app deps to their app path */
     gulp.task('copy-app-deps', _.union(['clean'], gulpTaskOptions['copy-app-deps']), function(cb) {
-        _.map(paths.deps, function(value, key) {
+        var promises = _.map(paths.deps, function(value, key) {
+            var deferred = Q.defer();
             if (value instanceof Array) {
                 _.map(value, function(v, k) {
                     gulp.src(key)
-                        .pipe(gulp.dest(v));
+                        .pipe(gulp.dest(v))
+                        .on('end', function() {
+                                deferred.resolve()
+                            });
+                    
                 });
             } else {
                 gulp.src(key)
-                    .pipe(gulp.dest(value));
+                    .pipe(gulp.dest(value))
+                    .on('end', function() {
+                            deferred.resolve()
+                        });
             }
+            return deferred.promise;
         });
-        cb();
+        Q.allSettled(promises).then(function() { cb(); }, cb);
     });
 
     /** Runs LESS compiler, auto-prefixer, and uglify, then creates js modules and outputs to temp folder */
