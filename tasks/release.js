@@ -85,6 +85,8 @@ module.exports = function(options) {
      *
      * Do not allow gulpTaskOptions within the release section or else it will
      * probably break some assumptions we make about release tasks.
+     * The one exception is for prompt-release, where you can add in hooks that
+     * need to be run before the git commands are run.
      */
 
     /** Temporarily copies the built folder to a temp dir so it will persist
@@ -100,7 +102,7 @@ module.exports = function(options) {
     });
 
     /** Prompts the user for info about the version */
-    gulp.task('prompt-release', ['pre-release', 'pre-release-meta'], function() {
+    gulp.task('prompt-release', _.union(['pre-release', 'pre-release-meta'], gulpTaskOptions['prompt-release']), function() {
         var questions = [
             {
                 type: 'list',
