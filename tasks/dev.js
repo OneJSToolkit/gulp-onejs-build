@@ -45,9 +45,11 @@ module.exports = function(options) {
 
     /** Runs a slew of commands for npm and bower to ensure your dependencies are up to date */
     gulp.task('update-deps', _.union(gulpTaskOptions['update-deps']), shell.task([
+        'npm cache clean',
         'npm prune',
         'npm install',
         'npm update',
+        'bower cache clean',
         'bower prune',
         'bower install',
         'bower update',
