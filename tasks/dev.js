@@ -17,6 +17,7 @@ module.exports = function(options) {
     var path = require('path');
     var through = require('through2');
     var Q = require('q');
+    var shell = require('gulp-shell');
 
     var gulp = options.gulp;
     var paths = options.paths;
@@ -41,6 +42,16 @@ module.exports = function(options) {
             paths.release.root
         ], cb);
     });
+
+    /** Runs a slew of commands for npm and bower to ensure your dependencies are up to date */
+    gulp.task('update-deps', _.union(gulpTaskOptions['update-deps']), shell.task([
+        'npm prune',
+        'npm install',
+        'npm update',
+        'bower prune',
+        'bower install',
+        'bower update',
+    ]));
 
     /** Copies app deps to their app path */
     gulp.task('copy-app-deps', _.union(['clean'], gulpTaskOptions['copy-app-deps']), function(cb) {
