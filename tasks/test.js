@@ -27,6 +27,8 @@ module.exports = function(options) {
         karma.start(_.merge({
             configFile: rootDir + '/karma.conf.js',
             singleRun: true
-        }, karmaOptions), done);
+        }, karmaOptions), karmaOptions['doneCb'] ? function(resultcode) {
+            done(karmaOptions['doneCb'](resultcode))
+        } : done);
     });
 }

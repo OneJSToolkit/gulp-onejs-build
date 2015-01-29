@@ -15,6 +15,7 @@ module.exports = function(options) {
     var tslint = require('gulp-tslint');
     var gutil = require('gulp-util');
     var path = require('path');
+    var through = require('through2');
 
     var gulp = options.gulp;
     var paths = options.paths;
